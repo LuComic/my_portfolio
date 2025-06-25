@@ -62,11 +62,11 @@
 					<div class="flex flex-col items-start justify-start text-zinc-400">
 						<p class="px-2 py-1">- Right now learning Svelte, which I like the most</p>
 						<p class="px-2 py-1">
-							- Vanilla HTML, CSS and Javascript as the founding blocks and for a first big project
+							- Vanilla HTML, CSS and Javascript as the founding blocks of web development
 						</p>
 						<p class="px-2 py-1">- React basics to know it and start learning tailwind</p>
 						<p class="px-2 py-1">- Typescript in React and Svelte</p>
-						<p class="px-2 py-1">- Python in school but haven't used in practice</p>
+						<p class="px-2 py-1">- Python in school</p>
 					</div>
 				</div>
 				<div>
