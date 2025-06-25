@@ -57,7 +57,7 @@
 				in:fade={{ duration: 400 }}
 				class="flex w-full flex-col gap-3 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4 xl:grid xl:grid-cols-4"
 			>
-				<div>
+				<div class="cursor-default">
 					<p class="mb-2 text-lg">Coding</p>
 					<div class="flex flex-col items-start justify-start text-zinc-400">
 						<p class="px-2 py-1">- Right now learning Svelte, which I like the most</p>
@@ -94,7 +94,7 @@
 							onclick={() => (terminalportActive = true)}
 							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
 							>- <p class="inline text-violet-400">terminalport</p>
-							a simple portfolio in the terminal</button
+							a simple portfolio in the terminal...</button
 						>
 						<button
 							onclick={() => (catMemeGenActive = true)}
@@ -104,7 +104,7 @@
 						>
 					</div>
 				</div>
-				<div>
+				<div class="cursor-default">
 					<p class="mb-2 text-lg">Experiences</p>
 					<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
 						<p class="px-2 py-1">
