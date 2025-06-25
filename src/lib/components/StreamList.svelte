@@ -10,7 +10,7 @@
 	const pics = [st1, st2, st3];
 </script>
 
-<div in:fade={{ duration: 200 }}>
+<div in:fade={{ duration: 150 }}>
 	<Carousel {pics} />
 	<div class="flex w-full items-center justify-between">
 		<h1 class="my-4 text-xl font-medium">StreamList</h1>

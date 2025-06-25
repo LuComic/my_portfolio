@@ -45,7 +45,7 @@
 		{:else if catMemeGenActive}
 			<CatMemeGen {closeCatMemeGen} />
 		{:else}
-			<div in:fade={{ duration: 600 }}>
+			<div in:fade={{ duration: 400 }}>
 				<h1 class="my-4 text-xl font-medium">Lukas Jääger, front-end developer</h1>
 				<p>
 					High school student, learning web dev in my own time and python in school. I really like
@@ -54,7 +54,7 @@
 				<hr class="hr my-4 border-zinc-600" />
 			</div>
 			<div
-				in:fade={{ duration: 400 }}
+				in:fade={{ duration: 200 }}
 				class="flex w-full flex-col gap-3 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4 xl:grid xl:grid-cols-4"
 			>
 				<div class="cursor-default">
@@ -144,7 +144,7 @@
 					</div>
 				</div>
 			</div>
-			<div in:fade={{ duration: 200 }}>
+			<div in:fade={{ duration: 100 }}>
 				<hr class="hr my-4 border-zinc-600" />
 				<p>
 					If you have any questions or want to contact me then you can via any of the socials or

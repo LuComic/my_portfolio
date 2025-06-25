@@ -5,7 +5,7 @@
 	import pic from '../pictures/catPic.png';
 </script>
 
-<div in:fade={{ duration: 200 }}>
+<div in:fade={{ duration: 150 }}>
 	<div
 		class="mx-auto mb-4 flex h-auto w-[90%] items-center justify-center rounded-xl border-2 border-zinc-900"
 	>
