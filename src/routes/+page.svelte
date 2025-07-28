@@ -109,9 +109,12 @@
 					<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
 						<p class="px-2 py-1">
 							- coding: currently only school, <strong>noortekunst</strong> was for a student business,
-							which was quite a big project
+							which was a bigger project
 						</p>
-						<p class="px-2 py-1">- other work: summer job at Nike (summer of 2024)</p>
+						<p class="px-2 py-1">
+							- other work: summer job at Nike (summer of 2024); summer job at Mikkeller (summer of
+							2025)
+						</p>
 					</div>
 				</div>
 				<div>
