@@ -6,15 +6,20 @@
 	import TermNotes from '$lib/components/TermNotes.svelte';
 	import TerminalPort from '$lib/components/TerminalPort.svelte';
 	import CatMemeGen from '$lib/components/CatMemeGen.svelte';
+	import NiceUtil from '$lib/components/NiceUtil.svelte';
 
 	let noorteKunstActive = $state(false);
 	let streamListActive = $state(false);
 	let termnotesActive = $state(false);
 	let terminalportActive = $state(false);
 	let catMemeGenActive = $state(false);
+	let niceUtilAcitve = $state(false);
 
 	const closeNoorteKunst = () => {
 		noorteKunstActive = false;
+	};
+	const closeNiceUtil = () => {
+		niceUtilAcitve = false;
 	};
 	const closeStreamList = () => {
 		streamListActive = false;
@@ -44,6 +49,8 @@
 			<TerminalPort {closeTerminalPort} />
 		{:else if catMemeGenActive}
 			<CatMemeGen {closeCatMemeGen} />
+		{:else if niceUtilAcitve}
+			<NiceUtil {closeNiceUtil} />
 		{:else}
 			<div in:fade={{ duration: 400 }}>
 				<h1 class="my-4 text-xl font-medium">Lukas Jääger, front-end developer</h1>
@@ -91,16 +98,22 @@
 							note taking app in the terminal...</button
 						>
 						<button
+							onclick={() => (catMemeGenActive = true)}
+							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
+							>- <p class="inline text-violet-400">Cat meme generator</p>
+							a basic cat meme generator...</button
+						>
+						<button
 							onclick={() => (terminalportActive = true)}
 							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
 							>- <p class="inline text-violet-400">terminalport</p>
 							a simple portfolio in the terminal...</button
 						>
 						<button
-							onclick={() => (catMemeGenActive = true)}
+							onclick={() => (niceUtilAcitve = true)}
 							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-							>- <p class="inline text-violet-400">Cat meme generator</p>
-							a basic cat meme generator...</button
+							>- <p class="inline text-violet-400">NiceUtil</p>
+							a Mac utility app...</button
 						>
 					</div>
 				</div>
