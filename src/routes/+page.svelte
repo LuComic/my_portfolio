@@ -35,6 +35,8 @@
 	};
 </script>
 
+<!--Create snippets like in 'edit_portfolio' when database gets connected-->
+
 <div class="flex h-auto min-h-screen w-screen items-center justify-center">
 	<div
 		class="flex h-full w-full flex-col items-start justify-start px-4 pt-8 md:w-3/4 md:pt-0 lg:w-1/2 lg:pt-0 xl:w-1/2 xl:pt-0"
@@ -53,7 +55,14 @@
 			<NiceUtil {closeNiceUtil} />
 		{:else}
 			<div in:fade={{ duration: 400 }}>
-				<h1 class="my-4 text-xl font-medium">Lukas Jääger, front-end developer</h1>
+				<div class="my-4 flex items-center justify-start">
+					<a
+						href="/admin_pin"
+						class="hover:btn rounded-lg text-xl font-medium text-[#e7e5e4] visited:text-[#e7e5e4] hover:bg-zinc-950/40 hover:px-2 hover:py-1 hover:text-xl"
+						>Lukas Jääger</a
+					>
+					<h1 class="text-xl font-medium">, front-end developer</h1>
+				</div>
 				<p>
 					High school student, learning web dev in my own time and python in school. I really like
 					music, I do track and field and right now program in my free time.

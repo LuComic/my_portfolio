@@ -13,12 +13,12 @@
 </script>
 
 <svelte:head>
-	{#each pics as pic}
+	{#each pics as pic (pic)}
 		<link rel="preload" as="image" href={pic} />
 	{/each}
 </svelte:head>
 
-{#each pics as pic, i}
+{#each pics as pic, i (pic)}
 	{#if i === current}
 		<div
 			class="mx-auto mb-4 flex h-auto w-[90%] items-center justify-center rounded-xl border-2 border-zinc-900"
