@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { closeNiceUtil }: { closeNiceUtil: () => void } = $props();
+	let { closeNiceUtil }: { closeNiceUtil: () => void } = $props();
 	import { SquareX } from '@lucide/svelte';
 	import Carousel from './Carousel.svelte';
 	import { fade } from 'svelte/transition';

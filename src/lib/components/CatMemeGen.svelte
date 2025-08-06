@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { closeCatMemeGen }: { closeCatMemeGen: () => void } = $props();
+	let { closeCatMemeGen }: { closeCatMemeGen: () => void } = $props();
 	import { SquareX } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 	import pic from '../pictures/catPic.png';

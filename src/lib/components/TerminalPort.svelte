@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { closeTerminalPort }: { closeTerminalPort: () => void } = $props();
+	let { closeTerminalPort }: { closeTerminalPort: () => void } = $props();
 	import { SquareX } from '@lucide/svelte';
 	import Carousel from './Carousel.svelte';
 	import { fade } from 'svelte/transition';

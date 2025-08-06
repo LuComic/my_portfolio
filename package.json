@@ -64,6 +64,7 @@
 	],
 	"dependencies": {
 		"@fontsource-variable/rubik": "^5.2.6",
-		"@lucide/svelte": "^0.523.0"
+		"@lucide/svelte": "^0.523.0",
+		"@supabase/supabase-js": "^2.53.0"
 	}
 }

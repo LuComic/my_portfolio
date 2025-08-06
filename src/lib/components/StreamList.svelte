@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { closeStreamList }: { closeStreamList: () => void } = $props();
+	let { closeStreamList }: { closeStreamList: () => void } = $props();
 	import { SquareX } from '@lucide/svelte';
 	import Carousel from './Carousel.svelte';
 	import { fade } from 'svelte/transition';

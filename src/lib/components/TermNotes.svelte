@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { closeTermnotes }: { closeTermnotes: () => void } = $props();
+	let { closeTermnotes }: { closeTermnotes: () => void } = $props();
 	import { SquareX } from '@lucide/svelte';
 	import Carousel from './Carousel.svelte';
 	import { fade } from 'svelte/transition';

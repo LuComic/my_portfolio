@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { closeNoorteKunst }: { closeNoorteKunst: () => void } = $props();
+	let { closeNoorteKunst }: { closeNoorteKunst: () => void } = $props();
 	import { SquareX } from '@lucide/svelte';
 	import Carousel from './Carousel.svelte';
 	import { fade } from 'svelte/transition';

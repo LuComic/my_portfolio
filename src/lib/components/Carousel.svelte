@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ArrowLeft, ArrowRight } from '@lucide/svelte';
-	const { pics }: { pics: string[] } = $props();
+	let { pics }: { pics: string[] } = $props();
 	let current = $state(0);
 
 	const moveRight = () => {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Instagram, Github, Facebook } from '@lucide/svelte';
+	import { Instagram, Github, Facebook, ChevronRight } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 	import NoorteKunst from '$lib/components/NoorteKunst.svelte';
 	import StreamList from '$lib/components/StreamList.svelte';
@@ -7,6 +7,7 @@
 	import TerminalPort from '$lib/components/TerminalPort.svelte';
 	import CatMemeGen from '$lib/components/CatMemeGen.svelte';
 	import NiceUtil from '$lib/components/NiceUtil.svelte';
+	import Projects from '$lib/components/Projects.svelte';
 
 	let noorteKunstActive = $state(false);
 	let streamListActive = $state(false);
@@ -14,6 +15,16 @@
 	let terminalportActive = $state(false);
 	let catMemeGenActive = $state(false);
 	let niceUtilAcitve = $state(false);
+	let projectsActive = $state(false);
+
+	let chosenProject = $state('');
+
+	$effect(() => {
+		if (chosenProject === 'noorteKunst') {
+			noorteKunstActive = true;
+			chosenProject = '';
+		}
+	});
 
 	const closeNoorteKunst = () => {
 		noorteKunstActive = false;
@@ -32,6 +43,10 @@
 	};
 	const closeCatMemeGen = () => {
 		catMemeGenActive = false;
+	};
+
+	const closeProjects = () => {
+		projectsActive = false;
 	};
 </script>
 
@@ -67,108 +82,118 @@
 					High school student, learning web dev in my own time and python in school. I really like
 					music, I do track and field and right now program in my free time.
 				</p>
-				<hr class="hr my-4 border-zinc-600" />
+				<hr class="hr mt-4 mb-3 border-zinc-600" />
 			</div>
-			<div
-				in:fade={{ duration: 200 }}
-				class="flex w-full flex-col gap-3 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4 xl:grid xl:grid-cols-4"
-			>
-				<div class="cursor-default">
-					<p class="mb-2 text-lg">Coding</p>
-					<div class="flex flex-col items-start justify-start text-zinc-400">
-						<p class="px-2 py-1">- Right now learning Svelte, which I like the most</p>
-						<p class="px-2 py-1">
-							- Vanilla HTML, CSS and Javascript as the founding blocks of web development
-						</p>
-						<p class="px-2 py-1">- React basics to know it and start learning tailwind</p>
-						<p class="px-2 py-1">- Typescript in React and Svelte</p>
-						<p class="px-2 py-1">- Python in school</p>
+			{#if projectsActive}
+				<Projects bind:chosenProject {closeProjects} />
+			{:else}
+				<div
+					in:fade={{ duration: 200 }}
+					class="flex w-full flex-col gap-3 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4 xl:grid xl:grid-cols-4"
+				>
+					<div class="cursor-default">
+						<p class="mb-1 px-2 py-1 text-lg">Coding</p>
+						<div class="flex flex-col items-start justify-start text-zinc-400">
+							<p class="px-2 py-1">- Right now learning Svelte, which I like the most</p>
+							<p class="px-2 py-1">
+								- Vanilla HTML, CSS and Javascript as the founding blocks of web development
+							</p>
+							<p class="px-2 py-1">- React basics to know it and start learning tailwind</p>
+							<p class="px-2 py-1">- Typescript in React and Svelte</p>
+							<p class="px-2 py-1">- Python in school</p>
+						</div>
+					</div>
+					<div>
+						<button
+							class="mb-1 flex items-center justify-start gap-1 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
+							onclick={() => (projectsActive = true)}
+						>
+							<p class="text-lg">Projects</p>
+							<ChevronRight size={20} />
+						</button>
+						<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
+							<button
+								onclick={() => (noorteKunstActive = true)}
+								class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
+								>- <p class="inline text-violet-400">noorteKunst</p>
+								art gallery/social media for starting artists...</button
+							>
+							<button
+								onclick={() => (streamListActive = true)}
+								class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
+								>- <p class="inline text-violet-400">streamList</p>
+								similar to Letterboxd, but better...</button
+							>
+							<button
+								onclick={() => (termnotesActive = true)}
+								class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
+								>- <p class="inline text-violet-400">termnotes</p>
+								note taking app in the terminal...</button
+							>
+							<button
+								onclick={() => (catMemeGenActive = true)}
+								class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
+								>- <p class="inline text-violet-400">Cat meme generator</p>
+								a basic cat meme generator...</button
+							>
+							<!-- <button -->
+							<!-- 	onclick={() => (terminalportActive = true)} -->
+							<!-- 	class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40" -->
+							<!-- 	>- <p class="inline text-violet-400">terminalport</p> -->
+							<!-- 	a simple portfolio in the terminal...</button -->
+							<!-- > -->
+							<!-- <button -->
+							<!-- 	onclick={() => (niceUtilAcitve = true)} -->
+							<!-- 	class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40" -->
+							<!-- 	>- <p class="inline text-violet-400">NiceUtil</p> -->
+							<!-- 	a Mac utility app...</button -->
+							<!-- > -->
+						</div>
+					</div>
+					<div class="cursor-default">
+						<p class="mb-1 px-2 py-1 text-lg">Experiences</p>
+						<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
+							<p class="px-2 py-1">
+								- coding: currently only school, <strong>noortekunst</strong> was for a student business,
+								which was a bigger project
+							</p>
+							<p class="px-2 py-1">
+								- other work: summer job at Nike (summer of 2024); summer job at Mikkeller (summer
+								of 2025)
+							</p>
+						</div>
+					</div>
+					<div>
+						<p class="mb-1 px-2 py-1 text-lg">Socials</p>
+						<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
+							<a
+								href="https://www.instagram.com/lucomic/"
+								target="_blank"
+								class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
+							>
+								<Instagram size={18} color="#FF6900" />
+								LuComic</a
+							>
+							<a
+								href="https://github.com/LuComic"
+								target="_blank"
+								class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
+							>
+								<Github size={18} color="#5D0EC1" />
+								LuComic</a
+							>
+							<a
+								href="https://www.facebook.com/profile.php?id=100032004948809"
+								target="_blank"
+								class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
+							>
+								<Facebook size={18} color="#1447E6" />
+								Lukas Jääger</a
+							>
+						</div>
 					</div>
 				</div>
-				<div>
-					<p class="mb-2 text-lg">Projects</p>
-					<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
-						<button
-							onclick={() => (noorteKunstActive = true)}
-							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-							>- <p class="inline text-violet-400">noorteKunst</p>
-							art gallery/social media for starting artists...</button
-						>
-						<button
-							onclick={() => (streamListActive = true)}
-							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-							>- <p class="inline text-violet-400">streamList</p>
-							similar to Letterboxd, but better...</button
-						>
-						<button
-							onclick={() => (termnotesActive = true)}
-							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-							>- <p class="inline text-violet-400">termnotes</p>
-							note taking app in the terminal...</button
-						>
-						<button
-							onclick={() => (catMemeGenActive = true)}
-							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-							>- <p class="inline text-violet-400">Cat meme generator</p>
-							a basic cat meme generator...</button
-						>
-						<button
-							onclick={() => (terminalportActive = true)}
-							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-							>- <p class="inline text-violet-400">terminalport</p>
-							a simple portfolio in the terminal...</button
-						>
-						<button
-							onclick={() => (niceUtilAcitve = true)}
-							class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-							>- <p class="inline text-violet-400">NiceUtil</p>
-							a Mac utility app...</button
-						>
-					</div>
-				</div>
-				<div class="cursor-default">
-					<p class="mb-2 text-lg">Experiences</p>
-					<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
-						<p class="px-2 py-1">
-							- coding: currently only school, <strong>noortekunst</strong> was for a student business,
-							which was a bigger project
-						</p>
-						<p class="px-2 py-1">
-							- other work: summer job at Nike (summer of 2024); summer job at Mikkeller (summer of
-							2025)
-						</p>
-					</div>
-				</div>
-				<div>
-					<p class="mb-2 text-lg">Socials</p>
-					<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
-						<a
-							href="https://www.instagram.com/lucomic/"
-							target="_blank"
-							class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
-						>
-							<Instagram size={18} color="#FF6900" />
-							LuComic</a
-						>
-						<a
-							href="https://github.com/LuComic"
-							target="_blank"
-							class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
-						>
-							<Github size={18} color="#5D0EC1" />
-							LuComic</a
-						>
-						<a
-							href="https://www.facebook.com/profile.php?id=100032004948809"
-							target="_blank"
-							class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
-						>
-							<Facebook size={18} color="#1447E6" />
-							Lukas Jääger</a
-						>
-					</div>
-				</div>
-			</div>
+			{/if}
 			<div in:fade={{ duration: 100 }}>
 				<hr class="hr my-4 border-zinc-600" />
 				<p>
