@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { Trash, Pencil, Plus, Instagram, Github, Facebook } from '@lucide/svelte';
 	import AddingModal from '$lib/components/AddingModal.svelte';
+	import EditModal from '$lib/components/EditModal.svelte';
 	import { fade } from 'svelte/transition';
+	import { supabase } from '$lib/supabase.js';
 	import {
 		loadCoding,
 		loadExperiences,
@@ -20,6 +22,10 @@
 	let footer: any[] = $state([]);
 
 	let adding = $state(false);
+	let editing = $state(false);
+
+	let id = $state(0);
+	let field = $state('');
 
 	// Load data on component mount
 	async function getData() {
@@ -31,10 +37,39 @@
 		projects = await loadProjects();
 	}
 
+	// Load coding
+	async function deleteField(field: string, id: number) {
+		if (field === 'projects') {
+			await supabase.from('projects').delete().eq('id', id);
+		} else if (field === 'coding') {
+			await supabase.from('coding').delete().eq('id', id);
+		} else if (field === 'socials') {
+			await supabase.from('socials').delete().eq('id', id);
+		} else if (field === 'experiences') {
+			await supabase.from('experiences').delete().eq('id', id);
+		} else {
+			console.log(`unknown field to be deleted: ${field}`);
+			return;
+		}
+		getData();
+	}
+
 	getData();
+
+	const closeEditingModal = () => {
+		editing = false;
+	};
 
 	const closeAddingModal = () => {
 		adding = false;
+	};
+
+	const chooseTheCurrentToEdit = (chosen_field: string, chosen_id: number) => {
+		editing = true;
+		id = 0;
+		id = chosen_id;
+		field = '';
+		field = chosen_field;
 	};
 </script>
 
@@ -42,10 +77,23 @@
 
 <div class="flex h-auto min-h-screen w-screen items-center justify-center">
 	<div
-		class="flex h-full w-full flex-col items-start justify-start px-4 pt-8 md:w-3/4 md:pt-0 lg:w-1/2 lg:pt-0 xl:w-1/2 xl:pt-0"
+		class="flex h-full w-full flex-col items-start justify-start px-4 py-8 md:w-3/4 md:py-4 lg:w-1/2 lg:py-4 xl:w-1/2 xl:py-4"
 	>
 		{#if adding}
 			<AddingModal {closeAddingModal} {getData} />
+		{:else if editing}
+			<EditModal
+				{closeEditingModal}
+				{id}
+				{field}
+				{getData}
+				{projects}
+				{experiences}
+				{footer}
+				{personal}
+				{socials}
+				{coding}
+			/>
 		{:else}
 			<div class="flex items-center justify-start gap-4" in:fade={{ duration: 400 }}>
 				<h1 class="text-xl font-medium">Edit portfolio</h1>
@@ -63,7 +111,10 @@
 						{#each personal as personal}
 							<p class="w-full text-zinc-400">{personal.bio_text}</p>
 						{/each}
-						<button class="btn ml-auto rounded-lg bg-amber-600 p-1">
+						<button
+							class="btn ml-auto rounded-lg bg-amber-600 p-1"
+							onclick={() => chooseTheCurrentToEdit('personal', 1)}
+						>
 							<Pencil size={16} />
 						</button>
 					</div>
@@ -76,7 +127,10 @@
 						{#each footer as footer}
 							<p class="w-full text-zinc-400">{footer.footer_text}</p>
 						{/each}
-						<button class="btn ml-auto rounded-lg bg-amber-600 p-1">
+						<button
+							class="btn ml-auto rounded-lg bg-amber-600 p-1"
+							onclick={() => chooseTheCurrentToEdit('footer', 1)}
+						>
 							<Pencil size={16} />
 						</button>
 					</div>
@@ -89,10 +143,16 @@
 						>
 							<p class="w-full text-zinc-400">{coding.description}</p>
 							<div class="flex w-auto items-center justify-center gap-2">
-								<button class="btn rounded-lg bg-amber-600 p-1">
+								<button
+									class="btn rounded-lg bg-amber-600 p-1"
+									onclick={() => chooseTheCurrentToEdit('coding', coding.id)}
+								>
 									<Pencil size={16} />
 								</button>
-								<button class="btn rounded-lg bg-red-700 p-1">
+								<button
+									class="btn rounded-lg bg-red-700 p-1"
+									onclick={() => deleteField('coding', coding.id)}
+								>
 									<Trash size={16} />
 								</button>
 							</div>
@@ -110,10 +170,16 @@
 								<p class="text-zinc-400">{proj.description}</p>
 							</div>
 							<div class="flex w-auto items-center justify-center gap-2">
-								<button class="btn rounded-lg bg-amber-600 p-1">
+								<button
+									class="btn rounded-lg bg-amber-600 p-1"
+									onclick={() => chooseTheCurrentToEdit('projects', proj.id)}
+								>
 									<Pencil size={16} />
 								</button>
-								<button class="btn rounded-lg bg-red-700 p-1">
+								<button
+									class="btn rounded-lg bg-red-700 p-1"
+									onclick={() => deleteField('projects', proj.id)}
+								>
 									<Trash size={16} />
 								</button>
 							</div>
@@ -128,10 +194,16 @@
 						>
 							<p class="w-full text-zinc-400">{exp.description}</p>
 							<div class="flex w-auto items-center justify-center gap-2">
-								<button class="btn rounded-lg bg-amber-600 p-1">
+								<button
+									class="btn rounded-lg bg-amber-600 p-1"
+									onclick={() => chooseTheCurrentToEdit('experiences', exp.id)}
+								>
 									<Pencil size={16} />
 								</button>
-								<button class="btn rounded-lg bg-red-700 p-1">
+								<button
+									class="btn rounded-lg bg-red-700 p-1"
+									onclick={() => deleteField('experiences', exp.id)}
+								>
 									<Trash size={16} />
 								</button>
 							</div>
@@ -159,10 +231,16 @@
 								{soc.social_name}</a
 							>
 							<div class="flex w-auto items-center justify-center gap-2">
-								<button class="btn rounded-lg bg-amber-600 p-1">
+								<button
+									class="btn rounded-lg bg-amber-600 p-1"
+									onclick={() => chooseTheCurrentToEdit('socials', soc.id)}
+								>
 									<Pencil size={16} />
 								</button>
-								<button class="btn rounded-lg bg-red-700 p-1">
+								<button
+									class="btn rounded-lg bg-red-700 p-1"
+									onclick={() => deleteField('socials', soc.id)}
+								>
 									<Trash size={16} />
 								</button>
 							</div>
