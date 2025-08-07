@@ -54,10 +54,12 @@
 	getData();
 </script>
 
-<div in:fade={{ duration: 150 }} class="py-4">
-	{#if loading || !imagesLoaded}
+{#if loading || !imagesLoaded}
+	<div class="w-full py-4">
 		<Progress value={loadingProgress} max={100} meterBg="bg-violet-400" />
-	{:else}
+	</div>
+{:else}
+	<div in:fade={{ duration: 150 }} class="py-4">
 		<Carousel pics={project?.images} />
 		<div class="flex w-full items-center justify-between">
 			<h1 class="my-4 text-xl font-medium">{project?.name}</h1>
@@ -74,5 +76,5 @@
 			class="mt-2 block text-violet-400 duration-125 hover:text-violet-500">{project?.website}</a
 		>
 		<p class="my-2 text-zinc-400">{project?.specifications}</p>
-	{/if}
-</div>
+	</div>
+{/if}
