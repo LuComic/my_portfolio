@@ -125,7 +125,7 @@
 					<h1 class="text-xl font-medium">, front-end developer</h1>
 				</div>
 				<p>
-					{personal[0]?.bio_text || 'Loading...'}
+					{personal[0]?.bio_text}
 				</p>
 				<hr class="hr mt-4 mb-3 border-zinc-600" />
 			</div>
@@ -140,7 +140,7 @@
 						<p class="mb-1 px-2 py-1 text-lg">Coding</p>
 						<div class="flex flex-col items-start justify-start text-zinc-400">
 							{#each coding as code (code.id)}
-								<p class="px-2 py-1">- {code?.description || 'Loading...'}</p>
+								<p class="px-2 py-1">- {code?.description}</p>
 							{/each}
 						</div>
 					</div>
@@ -157,8 +157,8 @@
 								<button
 									onclick={() => openProject(proj.id)}
 									class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-									>- <p class="inline text-violet-400">{proj?.name || 'Loading...'}:&nbsp</p>
-									{proj?.description.slice(0, 40) || 'Loading...'}...</button
+									>- <p class="inline text-violet-400">{proj?.name}:&nbsp</p>
+									{proj?.description.slice(0, 40)}...</button
 								>
 							{/each}
 						</div>
@@ -168,7 +168,7 @@
 						<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
 							{#each experiences as exp (exp.id)}
 								<p class="px-2 py-1">
-									- {exp?.description || 'Loading...'}
+									- {exp?.description}
 								</p>
 							{/each}
 						</div>
@@ -178,7 +178,7 @@
 						<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
 							{#each socials as soc (soc.id)}
 								<a
-									href={soc?.social_url || 'Loading...'}
+									href={soc?.social_url}
 									target="_blank"
 									class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
 									>{#if soc?.platform === 'Instagram'}
@@ -188,7 +188,7 @@
 									{:else if soc.platform === 'Facebook'}
 										<Facebook size={18} color="#1447E6" />
 									{/if}
-									{soc?.social_name || 'Loading...'}
+									{soc?.social_name}
 								</a>
 							{/each}
 						</div>
@@ -198,7 +198,7 @@
 			<div in:fade={{ duration: 100 }}>
 				<hr class="hr my-4 border-zinc-600" />
 				<p>
-					{footer[0]?.footer_text || 'Loading...'}
+					{footer[0]?.footer_text}
 				</p>
 				<p class="my-2 text-zinc-400">
 					This portfolio is inspired by <a
