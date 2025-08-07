@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Trash, Pencil, Plus, Instagram, Github, Facebook } from '@lucide/svelte';
+	import { Trash, Pencil, Plus, Instagram, Github, Facebook, ChevronLeft } from '@lucide/svelte';
 	import AddingModal from '$lib/components/AddingModal.svelte';
 	import EditModal from '$lib/components/EditModal.svelte';
 	import { fade } from 'svelte/transition';
@@ -96,7 +96,13 @@
 			/>
 		{:else}
 			<div class="flex items-center justify-start gap-4" in:fade={{ duration: 400 }}>
-				<h1 class="text-xl font-medium">Edit portfolio</h1>
+				<a
+					class="flex items-center justify-start gap-1 rounded-lg py-1 pr-2 pl-1 duration-125 hover:bg-zinc-950/40"
+					href="/"
+				>
+					<ChevronLeft size={24} />
+					<h1 class="text-xl font-medium">Edit portfolio</h1>
+				</a>
 				<button class="btn rounded-lg border-1 border-zinc-600 p-1" onclick={() => (adding = true)}>
 					<Plus size={18} />
 				</button>
@@ -167,7 +173,7 @@
 						>
 							<div class="flex flex-col items-start justify-start gap-1">
 								<p class="text-violet-400">{proj.name}</p>
-								<p class="text-zinc-400">{proj.description}</p>
+								<p class="text-zinc-400">{proj.description.slice(0, 100)}...</p>
 							</div>
 							<div class="flex w-auto items-center justify-center gap-2">
 								<button
@@ -248,8 +254,8 @@
 					{/each}
 				</div>
 			</div>
-			<form method="POST" class="my-8" in:fade={{ duration: 100 }}>
-				<button type="submit" class="btn rounded-lg bg-red-700 px-2 py-1">Log out</button>
+			<form method="POST" class="my-4 mt-8" in:fade={{ duration: 100 }}>
+				<button type="submit" class="btn rounded-lg bg-red-800 px-2 py-1">Log out</button>
 			</form>
 		{/if}
 	</div>

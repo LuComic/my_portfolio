@@ -145,10 +145,10 @@
 		const { data, error } = await supabase
 			.from('projects')
 			.update({
-				name: projectName,
-				description: projectDescription,
-				website: projectWebsite,
-				specifications: projectSpec,
+				name: projectName.trim(),
+				description: projectDescription.trim(),
+				website: projectWebsite.trim(),
+				specifications: projectSpec.trim(),
 				images: allImages
 			})
 			.eq('id', id);
@@ -160,8 +160,8 @@
 	}
 
 	// Update other fields
-	async function updateOtherFields(experiencesDesc: string) {
-		if (!experiencesDesc) {
+	async function updateOtherFields(someDesc: string) {
+		if (!someDesc) {
 			notFilled = true;
 			return;
 		}
@@ -172,7 +172,7 @@
 
 		if (field === 'personal' && personal.length === 0) {
 			const { data, error } = await supabase.from(field).insert({
-				bio_text: experiencesDesc
+				bio_text: someDesc.trim()
 			});
 			returnable_data = data;
 			returnable_error = error;
@@ -180,14 +180,14 @@
 			const { data, error } = await supabase
 				.from(field)
 				.update({
-					bio_text: experiencesDesc
+					bio_text: someDesc.trim()
 				})
 				.eq('id', id);
 			returnable_data = data;
 			returnable_error = error;
 		} else if (field === 'footer' && footer.length === 0) {
 			const { data, error } = await supabase.from(field).insert({
-				footer_text: experiencesDesc
+				footer_text: someDesc.trim()
 			});
 			returnable_data = data;
 			returnable_error = error;
@@ -195,7 +195,7 @@
 			const { data, error } = await supabase
 				.from(field)
 				.update({
-					footer_text: experiencesDesc
+					footer_text: someDesc.trim()
 				})
 				.eq('id', id);
 			returnable_data = data;
@@ -204,7 +204,7 @@
 			const { data, error } = await supabase
 				.from(field)
 				.update({
-					description: experiencesDesc
+					description: someDesc.trim()
 				})
 				.eq('id', id);
 			returnable_data = data;
@@ -228,9 +228,9 @@
 		const { data, error } = await supabase
 			.from('socials')
 			.update({
-				platform: socialsPlatform,
-				social_url: social_url,
-				social_name: socialName
+				platform: socialsPlatform.trim(),
+				social_url: social_url.trim(),
+				social_name: socialName.trim()
 			})
 			.eq('id', id);
 		loading = false;

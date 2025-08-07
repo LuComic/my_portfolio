@@ -1,48 +1,104 @@
 <script lang="ts">
-	import { Instagram, Github, Facebook, ChevronRight } from '@lucide/svelte';
+	import { Instagram, Github, Facebook, ChevronRight, Code } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
-	import NoorteKunst from '$lib/components/NoorteKunst.svelte';
-	import StreamList from '$lib/components/StreamList.svelte';
-	import TermNotes from '$lib/components/TermNotes.svelte';
-	import TerminalPort from '$lib/components/TerminalPort.svelte';
-	import CatMemeGen from '$lib/components/CatMemeGen.svelte';
+	import { Progress } from '@skeletonlabs/skeleton-svelte';
+	import type {
+		project_type,
+		coding_type,
+		social_type,
+		experiences_type,
+		footer_type,
+		personal_type
+	} from '$lib/types';
 	import NiceUtil from '$lib/components/NiceUtil.svelte';
 	import Projects from '$lib/components/Projects.svelte';
+	import {
+		loadCoding,
+		loadExperiences,
+		loadFooter,
+		loadPersonal,
+		loadProjects,
+		loadSocials
+	} from '$lib/supabase_data.svelte';
+	import ProjectModal from '$lib/components/ProjectModal.svelte';
 
-	let noorteKunstActive = $state(false);
-	let streamListActive = $state(false);
-	let termnotesActive = $state(false);
-	let terminalportActive = $state(false);
-	let catMemeGenActive = $state(false);
-	let niceUtilAcitve = $state(false);
 	let projectsActive = $state(false);
+	let projectModalActive = $state(false);
 
-	let chosenProject = $state('');
+	let projects: project_type[] = $state([]);
+	let coding: coding_type[] = $state([]);
+	let experiences: experiences_type[] = $state([]);
+	let socials: social_type[] = $state([]);
+	let personal: personal_type[] = $state([]);
+	let footer: footer_type[] = $state([]);
+
+	let loading = $state(true);
+	let loadingProgress = $state(0);
+
+	async function getData() {
+		loading = true;
+		loadingProgress = 0;
+
+		// The loading
+		const loadTasks = [
+			{ name: 'coding', fn: loadCoding },
+			{ name: 'experiences', fn: loadExperiences },
+			{ name: 'footer', fn: loadFooter },
+			{ name: 'personal', fn: loadPersonal },
+			{ name: 'socials', fn: loadSocials },
+			{ name: 'projects', fn: loadProjects }
+		];
+
+		for (let i = 0; i < loadTasks.length; i++) {
+			const task = loadTasks[i];
+			const data = await task.fn();
+
+			switch (task.name) {
+				case 'coding':
+					coding = data;
+					break;
+				case 'experiences':
+					experiences = data;
+					break;
+				case 'footer':
+					footer = data;
+					break;
+				case 'personal':
+					personal = data;
+					break;
+				case 'socials':
+					socials = data;
+					break;
+				case 'projects':
+					projects = data;
+					break;
+			}
+
+			loadingProgress = ((i + 1) / loadTasks.length) * 100;
+		}
+
+		loading = false;
+	}
+	getData();
+
+	let project_id = $state(0);
+	let id_from_projects = $state(0);
 
 	$effect(() => {
-		if (chosenProject === 'noorteKunst') {
-			noorteKunstActive = true;
-			chosenProject = '';
+		if (id_from_projects > 0) {
+			openProject(id_from_projects);
+			id_from_projects = 0;
 		}
 	});
 
-	const closeNoorteKunst = () => {
-		noorteKunstActive = false;
+	const openProject = (id: number) => {
+		projectModalActive = true;
+		project_id = id;
 	};
-	const closeNiceUtil = () => {
-		niceUtilAcitve = false;
-	};
-	const closeStreamList = () => {
-		streamListActive = false;
-	};
-	const closeTermnotes = () => {
-		termnotesActive = false;
-	};
-	const closeTerminalPort = () => {
-		terminalportActive = false;
-	};
-	const closeCatMemeGen = () => {
-		catMemeGenActive = false;
+
+	const closeProjectModal = () => {
+		projectModalActive = false;
+		project_id = 0;
 	};
 
 	const closeProjects = () => {
@@ -50,24 +106,14 @@
 	};
 </script>
 
-<!--Create snippets like in 'edit_portfolio' when database gets connected-->
-
 <div class="flex h-auto min-h-screen w-screen items-center justify-center">
 	<div
 		class="flex h-full w-full flex-col items-start justify-start px-4 pt-8 md:w-3/4 md:pt-0 lg:w-1/2 lg:pt-0 xl:w-1/2 xl:pt-0"
 	>
-		{#if noorteKunstActive}
-			<NoorteKunst {closeNoorteKunst} />
-		{:else if streamListActive}
-			<StreamList {closeStreamList} />
-		{:else if termnotesActive}
-			<TermNotes {closeTermnotes} />
-		{:else if terminalportActive}
-			<TerminalPort {closeTerminalPort} />
-		{:else if catMemeGenActive}
-			<CatMemeGen {closeCatMemeGen} />
-		{:else if niceUtilAcitve}
-			<NiceUtil {closeNiceUtil} />
+		{#if projectModalActive}
+			<ProjectModal {closeProjectModal} {project_id} />
+		{:else if loading}
+			<Progress value={loadingProgress} max={100} meterBg="bg-violet-400" />
 		{:else}
 			<div in:fade={{ duration: 400 }}>
 				<div class="my-4 flex items-center justify-start">
@@ -79,13 +125,12 @@
 					<h1 class="text-xl font-medium">, front-end developer</h1>
 				</div>
 				<p>
-					High school student, learning web dev in my own time and python in school. I really like
-					music, I do track and field and right now program in my free time.
+					{personal[0]?.bio_text || 'Loading...'}
 				</p>
 				<hr class="hr mt-4 mb-3 border-zinc-600" />
 			</div>
 			{#if projectsActive}
-				<Projects bind:chosenProject {closeProjects} />
+				<Projects bind:id_from_projects {closeProjects} {projects} />
 			{:else}
 				<div
 					in:fade={{ duration: 200 }}
@@ -94,13 +139,9 @@
 					<div class="cursor-default">
 						<p class="mb-1 px-2 py-1 text-lg">Coding</p>
 						<div class="flex flex-col items-start justify-start text-zinc-400">
-							<p class="px-2 py-1">- Right now learning Svelte, which I like the most</p>
-							<p class="px-2 py-1">
-								- Vanilla HTML, CSS and Javascript as the founding blocks of web development
-							</p>
-							<p class="px-2 py-1">- React basics to know it and start learning tailwind</p>
-							<p class="px-2 py-1">- Typescript in React and Svelte</p>
-							<p class="px-2 py-1">- Python in school</p>
+							{#each coding as code (code.id)}
+								<p class="px-2 py-1">- {code?.description || 'Loading...'}</p>
+							{/each}
 						</div>
 					</div>
 					<div>
@@ -112,84 +153,44 @@
 							<ChevronRight size={20} />
 						</button>
 						<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
-							<button
-								onclick={() => (noorteKunstActive = true)}
-								class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-								>- <p class="inline text-violet-400">noorteKunst</p>
-								art gallery/social media for starting artists...</button
-							>
-							<button
-								onclick={() => (streamListActive = true)}
-								class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-								>- <p class="inline text-violet-400">streamList</p>
-								similar to Letterboxd, but better...</button
-							>
-							<button
-								onclick={() => (termnotesActive = true)}
-								class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-								>- <p class="inline text-violet-400">termnotes</p>
-								note taking app in the terminal...</button
-							>
-							<button
-								onclick={() => (catMemeGenActive = true)}
-								class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
-								>- <p class="inline text-violet-400">Cat meme generator</p>
-								a basic cat meme generator...</button
-							>
-							<!-- <button -->
-							<!-- 	onclick={() => (terminalportActive = true)} -->
-							<!-- 	class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40" -->
-							<!-- 	>- <p class="inline text-violet-400">terminalport</p> -->
-							<!-- 	a simple portfolio in the terminal...</button -->
-							<!-- > -->
-							<!-- <button -->
-							<!-- 	onclick={() => (niceUtilAcitve = true)} -->
-							<!-- 	class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40" -->
-							<!-- 	>- <p class="inline text-violet-400">NiceUtil</p> -->
-							<!-- 	a Mac utility app...</button -->
-							<!-- > -->
+							{#each projects.slice(0, 4) as proj (proj.id)}
+								<button
+									onclick={() => openProject(proj.id)}
+									class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
+									>- <p class="inline text-violet-400">{proj?.name || 'Loading...'}:&nbsp</p>
+									{proj?.description.slice(0, 40) || 'Loading...'}...</button
+								>
+							{/each}
 						</div>
 					</div>
 					<div class="cursor-default">
 						<p class="mb-1 px-2 py-1 text-lg">Experiences</p>
 						<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
-							<p class="px-2 py-1">
-								- coding: currently only school, <strong>noortekunst</strong> was for a student business,
-								which was a bigger project
-							</p>
-							<p class="px-2 py-1">
-								- other work: summer job at Nike (summer of 2024); summer job at Mikkeller (summer
-								of 2025)
-							</p>
+							{#each experiences as exp (exp.id)}
+								<p class="px-2 py-1">
+									- {exp?.description || 'Loading...'}
+								</p>
+							{/each}
 						</div>
 					</div>
 					<div>
 						<p class="mb-1 px-2 py-1 text-lg">Socials</p>
 						<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
-							<a
-								href="https://www.instagram.com/lucomic/"
-								target="_blank"
-								class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
-							>
-								<Instagram size={18} color="#FF6900" />
-								LuComic</a
-							>
-							<a
-								href="https://github.com/LuComic"
-								target="_blank"
-								class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
-							>
-								<Github size={18} color="#5D0EC1" />
-								LuComic</a
-							>
-							<a
-								href="https://www.facebook.com/profile.php?id=100032004948809"
-								target="_blank"
-								class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
-							>
-								<Facebook size={18} color="#1447E6" />
-								Lukas Jääger</a
-							>
+							{#each socials as soc (soc.id)}
+								<a
+									href={soc?.social_url || 'Loading...'}
+									target="_blank"
+									class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 duration-125 hover:bg-zinc-950/40"
+									>{#if soc?.platform === 'Instagram'}
+										<Instagram size={18} color="#FF6900" />
+									{:else if soc.platform === 'Github'}
+										<Github size={18} color="#5D0EC1" />
+									{:else if soc.platform === 'Facebook'}
+										<Facebook size={18} color="#1447E6" />
+									{/if}
+									{soc?.social_name || 'Loading...'}
+								</a>
+							{/each}
 						</div>
 					</div>
 				</div>
@@ -197,8 +198,7 @@
 			<div in:fade={{ duration: 100 }}>
 				<hr class="hr my-4 border-zinc-600" />
 				<p>
-					If you have any questions or want to contact me then you can via any of the socials or
-					lukasjaager@gmail.com
+					{footer[0]?.footer_text || 'Loading...'}
 				</p>
 				<p class="my-2 text-zinc-400">
 					This portfolio is inspired by <a

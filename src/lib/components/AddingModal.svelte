@@ -63,10 +63,10 @@
 
 		const { data, error } = await supabase.from('projects').insert([
 			{
-				name: projectName,
-				description: projectDescription,
-				website: projectWebsite,
-				specifications: projectSpec,
+				name: projectName.trim(),
+				description: projectDescription.trim(),
+				website: projectWebsite.trim(),
+				specifications: projectSpec.trim(),
 				images: imageUrls // PostgreSQL automatically handles the array
 			}
 		]);
@@ -87,7 +87,7 @@
 
 		const { data, error } = await supabase.from('coding').insert([
 			{
-				description: codingDesc
+				description: codingDesc.trim()
 			}
 		]);
 		loading = false;
@@ -107,9 +107,9 @@
 
 		const { data, error } = await supabase.from('socials').insert([
 			{
-				platform: socialsPlatform,
-				social_url: social_url,
-				social_name: socialName
+				platform: socialsPlatform.trim(),
+				social_url: social_url.trim(),
+				social_name: socialName.trim()
 			}
 		]);
 		loading = false;
@@ -129,7 +129,7 @@
 
 		const { data, error } = await supabase.from('experiences').insert([
 			{
-				description: experiencesDesc
+				description: experiencesDesc.trim()
 			}
 		]);
 		loading = false;
