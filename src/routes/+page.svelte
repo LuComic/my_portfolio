@@ -10,7 +10,6 @@
 		footer_type,
 		personal_type
 	} from '$lib/types';
-	import NiceUtil from '$lib/components/NiceUtil.svelte';
 	import Projects from '$lib/components/Projects.svelte';
 	import {
 		loadCoding,
@@ -20,7 +19,7 @@
 		loadProjects,
 		loadSocials
 	} from '$lib/supabase_data.svelte';
-	import ProjectModal from '$lib/components/ProjectModal.svelte';
+	import { goto } from '$app/navigation';
 
 	let projectsActive = $state(false);
 	let projectModalActive = $state(false);
@@ -92,8 +91,7 @@
 	});
 
 	const openProject = (id: number) => {
-		projectModalActive = true;
-		project_id = id;
+		goto(`/${id}`);
 	};
 
 	const closeProjectModal = () => {
@@ -110,9 +108,7 @@
 	<div
 		class="flex h-full w-full flex-col items-start justify-start px-4 pt-8 md:w-3/4 md:pt-0 lg:w-1/2 lg:pt-0 xl:w-1/2 xl:pt-0"
 	>
-		{#if projectModalActive}
-			<ProjectModal {closeProjectModal} {project_id} />
-		{:else if loading}
+		{#if loading}
 			<Progress value={loadingProgress} max={100} meterBg="bg-violet-400" />
 		{:else}
 			<div in:fade={{ duration: 400 }}>
