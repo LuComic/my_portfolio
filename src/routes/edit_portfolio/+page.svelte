@@ -366,20 +366,30 @@
 								class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
 								data-id={soc.id}
 							>
-								<a
-									href={soc.social_url}
-									target="_blank"
-									class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 text-zinc-400 duration-125 visited:text-zinc-400 hover:bg-zinc-950/40"
-								>
-									{#if soc.platform === 'Instagram'}
-										<Instagram size={18} color="#FF6900" />
-									{:else if soc.platform === 'Github'}
-										<Github size={18} color="#5D0EC1" />
-									{:else if soc.platform === 'Facebook'}
-										<Facebook size={18} color="#1447E6" />
-									{/if}
-									{soc.social_name}
-								</a>
+								<div class="flex items-center gap-2">
+									<div
+										class="drag-handle cursor-grab px-1 text-zinc-500"
+										style="user-select: none;"
+										role="button"
+										tabindex="0"
+									>
+										<Grip size={18} />
+									</div>
+									<a
+										href={soc.social_url}
+										target="_blank"
+										class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 text-zinc-400 duration-125 visited:text-zinc-400 hover:bg-zinc-950/40"
+									>
+										{#if soc.platform === 'Instagram'}
+											<Instagram size={18} color="#FF6900" />
+										{:else if soc.platform === 'Github'}
+											<Github size={18} color="#5D0EC1" />
+										{:else if soc.platform === 'Facebook'}
+											<Facebook size={18} color="#1447E6" />
+										{/if}
+										{soc.social_name}
+									</a>
+								</div>
 								<div class="flex w-auto items-center justify-center gap-2">
 									<button
 										class="btn rounded-lg bg-amber-600 p-1"
