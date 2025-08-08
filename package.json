@@ -67,5 +67,6 @@
 		"@lucide/svelte": "^0.523.0",
 		"@supabase/supabase-js": "^2.53.0",
 		"svelte-dnd-action": "0.9.64"
-	}
+	},
+	"packageManager": "pnpm@10.14.0"
 }
