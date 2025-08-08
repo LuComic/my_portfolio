@@ -1,5 +1,14 @@
 <script lang="ts">
-	import { Trash, Pencil, Plus, Instagram, Github, Facebook, ChevronLeft } from '@lucide/svelte';
+	import {
+		Trash,
+		Pencil,
+		Plus,
+		Instagram,
+		Github,
+		Facebook,
+		ChevronLeft,
+		Grip
+	} from '@lucide/svelte';
 	import AddingModal from '$lib/components/AddingModal.svelte';
 	import EditModal from '$lib/components/EditModal.svelte';
 	import { fade } from 'svelte/transition';
@@ -219,14 +228,7 @@
 										role="button"
 										tabindex="0"
 									>
-										<div class="grid grid-cols-2 gap-0.5">
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-										</div>
+										<Grip size={18} />
 									</div>
 									<p class="w-full text-zinc-400">{codingItem.description}</p>
 								</div>
@@ -280,14 +282,7 @@
 										role="button"
 										tabindex="0"
 									>
-										<div class="grid grid-cols-2 gap-0.5">
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-										</div>
+										<Grip size={18} />
 									</div>
 									<div class="flex flex-col items-start justify-start gap-1">
 										<p class="text-violet-400">{proj.name}</p>
@@ -334,14 +329,7 @@
 										role="button"
 										tabindex="0"
 									>
-										<div class="grid grid-cols-2 gap-0.5">
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
-										</div>
+										<Grip size={18} />
 									</div>
 									<p class="w-full text-zinc-400">{exp.description}</p>
 								</div>
