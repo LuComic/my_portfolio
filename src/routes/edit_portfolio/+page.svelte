@@ -4,6 +4,7 @@
 	import EditModal from '$lib/components/EditModal.svelte';
 	import { fade } from 'svelte/transition';
 	import { supabase } from '$lib/supabase.js';
+	import { dndzone } from 'svelte-dnd-action';
 	import {
 		loadCoding,
 		loadExperiences,
@@ -71,6 +72,61 @@
 		field = '';
 		field = chosen_field;
 	};
+
+	// Drag & drop reordering for projects using svelte-dnd-action
+	let savingOrder = $state(false);
+	let saveError = $state('');
+
+	async function persistProjectOrder() {
+		saveError = '';
+		savingOrder = true;
+		let hadError = false;
+		try {
+			await Promise.all(
+				projects.map(async (proj, idx) => {
+					const { error } = await supabase
+						.from('projects')
+						.update({ order_index: idx })
+						.eq('id', proj.id);
+					if (error) throw error;
+				})
+			);
+		} catch (e) {
+			console.error('Failed to save order', e);
+			saveError = 'Failed to save order';
+			hadError = true;
+		} finally {
+			savingOrder = false;
+			if (!hadError) getData();
+		}
+	}
+
+	async function persistOrderFor(
+		table: 'coding' | 'experiences' | 'socials',
+		items: Array<{ id: number }>
+	) {
+		saveError = '';
+		savingOrder = true;
+		let hadError = false;
+		try {
+			await Promise.all(
+				items.map(async (item, idx) => {
+					const { error } = await supabase
+						.from(table)
+						.update({ order_index: idx })
+						.eq('id', item.id);
+					if (error) throw error;
+				})
+			);
+		} catch (e) {
+			console.error('Failed to save order for', table, e);
+			saveError = 'Failed to save order';
+			hadError = true;
+		} finally {
+			savingOrder = false;
+			if (!hadError) getData();
+		}
+	}
 </script>
 
 <!--Maybe snippets later-->
@@ -109,7 +165,7 @@
 			</div>
 			<hr class="hr my-2 border-zinc-600" />
 			<div class="flex w-full flex-col items-start justify-start" in:fade={{ duration: 200 }}>
-				<div class="my-2 w-full">
+				<div class="my-2 w-full" style="user-select: none;">
 					<p class="mb-2 text-lg">Bio</p>
 					<div
 						class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
@@ -143,115 +199,216 @@
 				</div>
 				<div class="my-2 w-full">
 					<p class="mb-2 text-lg">Coding</p>
-					{#each coding as coding}
-						<div
-							class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
-						>
-							<p class="w-full text-zinc-400">{coding.description}</p>
-							<div class="flex w-auto items-center justify-center gap-2">
-								<button
-									class="btn rounded-lg bg-amber-600 p-1"
-									onclick={() => chooseTheCurrentToEdit('coding', coding.id)}
-								>
-									<Pencil size={16} />
-								</button>
-								<button
-									class="btn rounded-lg bg-red-700 p-1"
-									onclick={() => deleteField('coding', coding.id)}
-								>
-									<Trash size={16} />
-								</button>
+					<div
+						use:dndzone={{ items: coding, flipDurationMs: 150, dropTargetStyle: {} }}
+						onconsider={(e) => (coding = e.detail.items)}
+						onfinalize={async () => {
+							await persistOrderFor('coding', coding);
+						}}
+						class="dnd-zone w-full"
+					>
+						{#each coding as codingItem (codingItem.id)}
+							<div
+								class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
+								data-id={codingItem.id}
+							>
+								<div class="flex items-center gap-2">
+									<div
+										class="drag-handle cursor-grab px-1 text-zinc-500"
+										style="user-select: none;"
+										role="button"
+										tabindex="0"
+									>
+										<div class="grid grid-cols-2 gap-0.5">
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+										</div>
+									</div>
+									<p class="w-full text-zinc-400">{codingItem.description}</p>
+								</div>
+								<div class="flex w-auto items-center justify-center gap-2">
+									<button
+										class="btn rounded-lg bg-amber-600 p-1"
+										onclick={() => chooseTheCurrentToEdit('coding', codingItem.id)}
+									>
+										<Pencil size={16} />
+									</button>
+									<button
+										class="btn rounded-lg bg-red-700 p-1"
+										onclick={() => deleteField('coding', codingItem.id)}
+									>
+										<Trash size={16} />
+									</button>
+								</div>
 							</div>
-						</div>
-					{/each}
+						{/each}
+					</div>
 				</div>
 				<div class="my-2 w-full">
 					<p class="mb-2 text-lg">Projects</p>
-					{#each projects as proj}
-						<div
-							class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
-						>
-							<div class="flex flex-col items-start justify-start gap-1">
-								<p class="text-violet-400">{proj.name}</p>
-								<p class="text-zinc-400">{proj.description.slice(0, 100)}...</p>
+					{#if saveError}
+						<p class="text-sm text-red-500">{saveError}</p>
+					{/if}
+					<div
+						use:dndzone={{
+							items: projects,
+							dragDisabled: false,
+							flipDurationMs: 150,
+							dropTargetStyle: {}
+						}}
+						onconsider={(e) => (projects = e.detail.items)}
+						onfinalize={async () => {
+							await persistProjectOrder();
+						}}
+						class="dnd-zone w-full"
+					>
+						{#each projects as proj, i (proj.id)}
+							<div
+								class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
+								role="listitem"
+								style="user-select: none;"
+								data-id={proj.id}
+							>
+								<div class="flex items-center gap-2">
+									<div
+										class="drag-handle cursor-grab px-1 text-zinc-500"
+										style="user-select: none;"
+										role="button"
+										tabindex="0"
+									>
+										<div class="grid grid-cols-2 gap-0.5">
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+										</div>
+									</div>
+									<div class="flex flex-col items-start justify-start gap-1">
+										<p class="text-violet-400">{proj.name}</p>
+										<p class="text-zinc-400">{proj.description.slice(0, 100)}...</p>
+									</div>
+								</div>
+								<div class="flex w-auto items-center justify-center gap-2">
+									<button
+										class="btn rounded-lg bg-amber-600 p-1"
+										onclick={() => chooseTheCurrentToEdit('projects', proj.id)}
+									>
+										<Pencil size={16} />
+									</button>
+									<button
+										class="btn rounded-lg bg-red-700 p-1"
+										onclick={() => deleteField('projects', proj.id)}
+									>
+										<Trash size={16} />
+									</button>
+								</div>
 							</div>
-							<div class="flex w-auto items-center justify-center gap-2">
-								<button
-									class="btn rounded-lg bg-amber-600 p-1"
-									onclick={() => chooseTheCurrentToEdit('projects', proj.id)}
-								>
-									<Pencil size={16} />
-								</button>
-								<button
-									class="btn rounded-lg bg-red-700 p-1"
-									onclick={() => deleteField('projects', proj.id)}
-								>
-									<Trash size={16} />
-								</button>
-							</div>
-						</div>
-					{/each}
+						{/each}
+					</div>
 				</div>
 				<div class="my-2 w-full">
 					<p class="mb-2 text-lg">Experiences</p>
-					{#each experiences as exp}
-						<div
-							class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
-						>
-							<p class="w-full text-zinc-400">{exp.description}</p>
-							<div class="flex w-auto items-center justify-center gap-2">
-								<button
-									class="btn rounded-lg bg-amber-600 p-1"
-									onclick={() => chooseTheCurrentToEdit('experiences', exp.id)}
-								>
-									<Pencil size={16} />
-								</button>
-								<button
-									class="btn rounded-lg bg-red-700 p-1"
-									onclick={() => deleteField('experiences', exp.id)}
-								>
-									<Trash size={16} />
-								</button>
+					<div
+						use:dndzone={{ items: experiences, flipDurationMs: 150, dropTargetStyle: {} }}
+						onconsider={(e) => (experiences = e.detail.items)}
+						onfinalize={async () => {
+							await persistOrderFor('experiences', experiences);
+						}}
+						class="dnd-zone w-full"
+					>
+						{#each experiences as exp (exp.id)}
+							<div
+								class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
+								data-id={exp.id}
+							>
+								<div class="flex items-center gap-2">
+									<div
+										class="drag-handle cursor-grab px-1 text-zinc-500"
+										style="user-select: none;"
+										role="button"
+										tabindex="0"
+									>
+										<div class="grid grid-cols-2 gap-0.5">
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+											<span class="block h-1 w-1 rounded-full bg-zinc-500"></span>
+										</div>
+									</div>
+									<p class="w-full text-zinc-400">{exp.description}</p>
+								</div>
+								<div class="flex w-auto items-center justify-center gap-2">
+									<button
+										class="btn rounded-lg bg-amber-600 p-1"
+										onclick={() => chooseTheCurrentToEdit('experiences', exp.id)}
+									>
+										<Pencil size={16} />
+									</button>
+									<button
+										class="btn rounded-lg bg-red-700 p-1"
+										onclick={() => deleteField('experiences', exp.id)}
+									>
+										<Trash size={16} />
+									</button>
+								</div>
 							</div>
-						</div>
-					{/each}
+						{/each}
+					</div>
 				</div>
 				<div class="my-2 w-full">
 					<p class="mb-2 text-lg">Socials</p>
-					{#each socials as soc}
-						<div
-							class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
-						>
-							<a
-								href={soc.social_url}
-								target="_blank"
-								class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 text-zinc-400 duration-125 visited:text-zinc-400 hover:bg-zinc-950/40"
+					<div
+						use:dndzone={{ items: socials, flipDurationMs: 150, dropTargetStyle: {} }}
+						onconsider={(e) => (socials = e.detail.items)}
+						onfinalize={async () => {
+							await persistOrderFor('socials', socials);
+						}}
+						class="dnd-zone w-full"
+					>
+						{#each socials as soc (soc.id)}
+							<div
+								class="flex w-full items-center justify-between gap-2 border-b-1 border-zinc-600 py-1"
+								data-id={soc.id}
 							>
-								{#if soc.platform === 'Instagram'}
-									<Instagram size={18} color="#FF6900" />
-								{:else if soc.platform === 'Github'}
-									<Github size={18} color="#5D0EC1" />
-								{:else if soc.platform === 'Facebook'}
-									<Facebook size={18} color="#1447E6" />
-								{/if}
-								{soc.social_name}</a
-							>
-							<div class="flex w-auto items-center justify-center gap-2">
-								<button
-									class="btn rounded-lg bg-amber-600 p-1"
-									onclick={() => chooseTheCurrentToEdit('socials', soc.id)}
+								<a
+									href={soc.social_url}
+									target="_blank"
+									class="flex items-center justify-start gap-2 rounded-lg px-2 py-1 text-zinc-400 duration-125 visited:text-zinc-400 hover:bg-zinc-950/40"
 								>
-									<Pencil size={16} />
-								</button>
-								<button
-									class="btn rounded-lg bg-red-700 p-1"
-									onclick={() => deleteField('socials', soc.id)}
-								>
-									<Trash size={16} />
-								</button>
+									{#if soc.platform === 'Instagram'}
+										<Instagram size={18} color="#FF6900" />
+									{:else if soc.platform === 'Github'}
+										<Github size={18} color="#5D0EC1" />
+									{:else if soc.platform === 'Facebook'}
+										<Facebook size={18} color="#1447E6" />
+									{/if}
+									{soc.social_name}
+								</a>
+								<div class="flex w-auto items-center justify-center gap-2">
+									<button
+										class="btn rounded-lg bg-amber-600 p-1"
+										onclick={() => chooseTheCurrentToEdit('socials', soc.id)}
+									>
+										<Pencil size={16} />
+									</button>
+									<button
+										class="btn rounded-lg bg-red-700 p-1"
+										onclick={() => deleteField('socials', soc.id)}
+									>
+										<Trash size={16} />
+									</button>
+								</div>
 							</div>
-						</div>
-					{/each}
+						{/each}
+					</div>
 				</div>
 			</div>
 			<form method="POST" class="my-4 mt-8" in:fade={{ duration: 100 }}>

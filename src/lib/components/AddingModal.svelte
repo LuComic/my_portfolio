@@ -61,19 +61,52 @@
 		loading = true;
 		const imageUrls = await uploadMultipleImages(projectImages);
 
-		const { data, error } = await supabase.from('projects').insert([
-			{
-				name: projectName.trim(),
-				description: projectDescription.trim(),
-				website: projectWebsite.trim(),
-				specifications: projectSpec.trim(),
-				images: imageUrls // PostgreSQL automatically handles the array
+		// Try to append to the end of the current order if order_index exists
+		let nextOrderIndex: number | null = null;
+		try {
+			const { data: maxOrder, error: maxErr } = await supabase
+				.from('projects')
+				.select('order_index')
+				.order('order_index', { ascending: false })
+				.limit(1)
+				.single();
+			if (!maxErr && maxOrder && typeof maxOrder.order_index === 'number') {
+				nextOrderIndex = (maxOrder.order_index as number) + 1;
 			}
-		]);
+		} catch (e) {
+			// ignore, column may not exist yet
+		}
+
+		const newProject: Record<string, unknown> = {
+			name: projectName.trim(),
+			description: projectDescription.trim(),
+			website: projectWebsite.trim(),
+			specifications: projectSpec.trim(),
+			images: imageUrls
+		};
+		if (nextOrderIndex !== null) newProject.order_index = nextOrderIndex;
+
+		const { data, error } = await supabase.from('projects').insert([newProject]);
 		loading = false;
 		getData();
 		closeAddingModal();
 		return { data, error };
+	}
+
+	// Helpers to get next order_index for lists
+	async function getNextIndex(table: 'coding' | 'experiences' | 'socials'): Promise<number | null> {
+		try {
+			const { data, error } = await supabase
+				.from(table)
+				.select('order_index')
+				.order('order_index', { ascending: false })
+				.limit(1)
+				.single();
+			if (!error && data && typeof data.order_index === 'number') {
+				return (data.order_index as number) + 1;
+			}
+		} catch (_) {}
+		return null;
 	}
 
 	// Add coding
@@ -85,9 +118,11 @@
 		notFilled = false;
 		loading = true;
 
+		const nextIdx = await getNextIndex('coding');
 		const { data, error } = await supabase.from('coding').insert([
 			{
-				description: codingDesc.trim()
+				description: codingDesc.trim(),
+				...(nextIdx !== null ? { order_index: nextIdx } : {})
 			}
 		]);
 		loading = false;
@@ -105,11 +140,13 @@
 		notFilled = false;
 		loading = true;
 
+		const nextIdx = await getNextIndex('socials');
 		const { data, error } = await supabase.from('socials').insert([
 			{
 				platform: socialsPlatform.trim(),
 				social_url: social_url.trim(),
-				social_name: socialName.trim()
+				social_name: socialName.trim(),
+				...(nextIdx !== null ? { order_index: nextIdx } : {})
 			}
 		]);
 		loading = false;
@@ -127,9 +164,11 @@
 		notFilled = false;
 		loading = true;
 
+		const nextIdx = await getNextIndex('experiences');
 		const { data, error } = await supabase.from('experiences').insert([
 			{
-				description: experiencesDesc.trim()
+				description: experiencesDesc.trim(),
+				...(nextIdx !== null ? { order_index: nextIdx } : {})
 			}
 		]);
 		loading = false;

@@ -2,56 +2,102 @@ import { supabase } from './supabase';
 
 // Load projects
 export async function loadProjects() {
-	const { data, error } = await supabase
+	// Try to order by custom order_index first; fall back to created_at if column does not exist
+	let { data, error } = await supabase
 		.from('projects')
 		.select('*')
+		.order('order_index', { ascending: true })
 		.order('created_at', { ascending: false });
 
 	if (error) {
-		console.error('Error loading projects:', error);
-		return [];
+		console.warn('Ordering by order_index failed, falling back to created_at. Error:', error);
+		const fallback = await supabase
+			.from('projects')
+			.select('*')
+			.order('created_at', { ascending: false });
+		if (fallback.error) {
+			console.error('Error loading projects:', fallback.error);
+			return [];
+		}
+		return fallback.data || [];
 	}
 	return data || [];
 }
 
 // Load coding
 export async function loadCoding() {
-	const { data, error } = await supabase
+	let { data, error } = await supabase
 		.from('coding')
 		.select('*')
+		.order('order_index', { ascending: true })
 		.order('created_at', { ascending: false });
 
 	if (error) {
-		console.error('Error loading coding:', error);
-		return [];
+		console.warn(
+			'Ordering coding by order_index failed, falling back to created_at. Error:',
+			error
+		);
+		const fallback = await supabase
+			.from('coding')
+			.select('*')
+			.order('created_at', { ascending: false });
+		if (fallback.error) {
+			console.error('Error loading coding:', fallback.error);
+			return [];
+		}
+		return fallback.data || [];
 	}
 	return data || [];
 }
 
 // Load experiences
 export async function loadExperiences() {
-	const { data, error } = await supabase
+	let { data, error } = await supabase
 		.from('experiences')
 		.select('*')
+		.order('order_index', { ascending: true })
 		.order('created_at', { ascending: false });
 
 	if (error) {
-		console.error('Error loading experiences:', error);
-		return [];
+		console.warn(
+			'Ordering experiences by order_index failed, falling back to created_at. Error:',
+			error
+		);
+		const fallback = await supabase
+			.from('experiences')
+			.select('*')
+			.order('created_at', { ascending: false });
+		if (fallback.error) {
+			console.error('Error loading experiences:', fallback.error);
+			return [];
+		}
+		return fallback.data || [];
 	}
 	return data || [];
 }
 
 // Load socials
 export async function loadSocials() {
-	const { data, error } = await supabase
+	let { data, error } = await supabase
 		.from('socials')
 		.select('*')
+		.order('order_index', { ascending: true })
 		.order('created_at', { ascending: false });
 
 	if (error) {
-		console.error('Error loading socials:', error);
-		return [];
+		console.warn(
+			'Ordering socials by order_index failed, falling back to created_at. Error:',
+			error
+		);
+		const fallback = await supabase
+			.from('socials')
+			.select('*')
+			.order('created_at', { ascending: false });
+		if (fallback.error) {
+			console.error('Error loading socials:', fallback.error);
+			return [];
+		}
+		return fallback.data || [];
 	}
 	return data || [];
 }

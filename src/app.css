@@ -17,3 +17,31 @@ h2,
 h3 {
 	line-height: 2;
 }
+
+/* Remove default svelte-dnd-action outline/border while dragging */
+.dndDraggingSource,
+.dndOver,
+.dndPlaceholder {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+/* Some browsers add a focus/outline style; remove during dragging */
+[draggable='true'],
+.dndDragging {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+/* svelte-dnd-action adds inline styles and classes; make sure our overrides win */
+.dnd-zone * {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+/* common focus styles removal for buttons/containers during drag */
+.dnd-zone [role='listitem'],
+.dnd-zone [role='button'] {
+	outline: none !important;
+	box-shadow: none !important;
+}
