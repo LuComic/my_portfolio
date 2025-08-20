@@ -22,7 +22,6 @@
 		personal: personal_type[];
 		footer: footer_type[];
 	} = $props();
-	import { supabase } from '$lib/supabase';
 	import { SquareX, X } from '@lucide/svelte';
 	import type {
 		project_type,
@@ -32,7 +31,6 @@
 		footer_type,
 		experiences_type
 	} from '$lib/types';
-	import type { PostgrestError } from '@supabase/supabase-js';
 
 	// Project related fields
 	let projectName = $state('');
@@ -93,25 +91,19 @@
 	let notFilled = $state(false);
 	let loading = $state(false);
 
-	// Upload multiple images
+	// Upload multiple images via server API
 	async function uploadMultipleImages(files: FileList) {
 		const fileArray = Array.from(files);
 		const uploadPromises = fileArray.map(async (file: File) => {
-			const fileExt = file.name.split('.').pop();
-			const fileName = `${Math.random()}.${fileExt}`;
-
-			const { data, error } = await supabase.storage.from('images').upload(fileName, file);
-
-			if (error) {
-				console.error('Error uploading:', error);
+			const form = new FormData();
+			form.set('file', file);
+			const res = await fetch('/api/storage/upload', { method: 'POST', body: form });
+			if (!res.ok) {
+				console.error('Error uploading:', await res.text());
 				return null;
 			}
-
-			const {
-				data: { publicUrl }
-			} = supabase.storage.from('images').getPublicUrl(fileName);
-
-			return publicUrl;
+			const json = await res.json();
+			return json.publicUrl as string;
 		});
 
 		const imageUrls = await Promise.all(uploadPromises);
@@ -142,21 +134,22 @@
 		// Combine current images with new ones
 		const allImages = [...currentImages, ...newImageUrls];
 
-		const { data, error } = await supabase
-			.from('projects')
-			.update({
-				name: projectName.trim(),
-				description: projectDescription.trim(),
-				website: projectWebsite.trim(),
-				specifications: projectSpec.trim(),
-				images: allImages
-			})
-			.eq('id', id);
+		const form = new FormData();
+		form.set('id', String(id));
+		form.set('name', projectName.trim());
+		form.set('description', projectDescription.trim());
+		form.set('website', projectWebsite.trim());
+		form.set('specifications', projectSpec.trim());
+		form.set('imageUrls', JSON.stringify(allImages));
+		const res = await fetch('?/updateProject', { method: 'POST', body: form });
 
 		loading = false;
 		getData();
 		closeEditingModal();
-		return { data, error };
+		if (!res.ok) {
+			console.error('Update project failed', await res.text());
+		}
+		return {};
 	}
 
 	// Update other fields
@@ -167,53 +160,19 @@
 		}
 		notFilled = false;
 		loading = true;
-		let returnable_data = null;
-		let returnable_error: PostgrestError | null = null;
 
-		if (field === 'personal' && personal.length === 0) {
-			const { data, error } = await supabase.from(field).insert({
-				bio_text: someDesc.trim()
-			});
-			returnable_data = data;
-			returnable_error = error;
-		} else if (field === 'personal') {
-			const { data, error } = await supabase
-				.from(field)
-				.update({
-					bio_text: someDesc.trim()
-				})
-				.eq('id', id);
-			returnable_data = data;
-			returnable_error = error;
-		} else if (field === 'footer' && footer.length === 0) {
-			const { data, error } = await supabase.from(field).insert({
-				footer_text: someDesc.trim()
-			});
-			returnable_data = data;
-			returnable_error = error;
-		} else if (field === 'footer') {
-			const { data, error } = await supabase
-				.from(field)
-				.update({
-					footer_text: someDesc.trim()
-				})
-				.eq('id', id);
-			returnable_data = data;
-			returnable_error = error;
-		} else {
-			const { data, error } = await supabase
-				.from(field)
-				.update({
-					description: someDesc.trim()
-				})
-				.eq('id', id);
-			returnable_data = data;
-			returnable_error = error;
-		}
+		const f = new FormData();
+		f.set('table', field);
+		f.set('id', String(id));
+		f.set('description', someDesc.trim());
+		const r = await fetch('?/updateOther', { method: 'POST', body: f });
 		loading = false;
 		getData();
 		closeEditingModal();
-		return { returnable_data, returnable_error };
+		if (!r.ok) {
+			console.error('Update failed', await r.text());
+		}
+		return {};
 	}
 
 	// Update socials
@@ -225,18 +184,19 @@
 		notFilled = false;
 		loading = true;
 
-		const { data, error } = await supabase
-			.from('socials')
-			.update({
-				platform: socialsPlatform.trim(),
-				social_url: social_url.trim(),
-				social_name: socialName.trim()
-			})
-			.eq('id', id);
+		const sform = new FormData();
+		sform.set('id', String(id));
+		sform.set('platform', socialsPlatform.trim());
+		sform.set('social_url', social_url.trim());
+		sform.set('social_name', socialName.trim());
+		const rr = await fetch('?/updateSocial', { method: 'POST', body: sform });
 		loading = false;
 		getData();
 		closeEditingModal();
-		return { data, error };
+		if (!rr.ok) {
+			console.error('Update socials failed', await rr.text());
+		}
+		return {};
 	}
 </script>
 

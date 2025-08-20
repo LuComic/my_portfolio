@@ -10,9 +10,7 @@
 		Grip
 	} from '@lucide/svelte';
 	import AddingModal from '$lib/components/AddingModal.svelte';
-	import EditModal from '$lib/components/EditModal.svelte';
 	import { fade } from 'svelte/transition';
-	import { supabase } from '$lib/supabase.js';
 	import { dndzone } from 'svelte-dnd-action';
 	import {
 		loadCoding,
@@ -23,6 +21,7 @@
 		loadSocials
 	} from '$lib/supabase_data.svelte';
 	let { data } = $props();
+	import EditModal from '$lib/components/EditModal.svelte';
 
 	let projects: any[] = $state([]);
 	let coding: any[] = $state([]);
@@ -47,18 +46,14 @@
 		projects = await loadProjects();
 	}
 
-	// Load coding
+	// Delete item via server action
 	async function deleteField(field: string, id: number) {
-		if (field === 'projects') {
-			await supabase.from('projects').delete().eq('id', id);
-		} else if (field === 'coding') {
-			await supabase.from('coding').delete().eq('id', id);
-		} else if (field === 'socials') {
-			await supabase.from('socials').delete().eq('id', id);
-		} else if (field === 'experiences') {
-			await supabase.from('experiences').delete().eq('id', id);
-		} else {
-			console.log(`unknown field to be deleted: ${field}`);
+		const form = new FormData();
+		form.set('table', field);
+		form.set('id', String(id));
+		const res = await fetch('?/delete', { method: 'POST', body: form });
+		if (!res.ok) {
+			console.error('Delete failed', await res.text());
 			return;
 		}
 		getData();
@@ -91,15 +86,11 @@
 		savingOrder = true;
 		let hadError = false;
 		try {
-			await Promise.all(
-				projects.map(async (proj, idx) => {
-					const { error } = await supabase
-						.from('projects')
-						.update({ order_index: idx })
-						.eq('id', proj.id);
-					if (error) throw error;
-				})
-			);
+			const form = new FormData();
+			form.set('table', 'projects');
+			form.set('items', JSON.stringify(projects.map((p) => ({ id: p.id }))));
+			const res = await fetch('?/reorder', { method: 'POST', body: form });
+			if (!res.ok) throw new Error(await res.text());
 		} catch (e) {
 			console.error('Failed to save order', e);
 			saveError = 'Failed to save order';
@@ -118,15 +109,11 @@
 		savingOrder = true;
 		let hadError = false;
 		try {
-			await Promise.all(
-				items.map(async (item, idx) => {
-					const { error } = await supabase
-						.from(table)
-						.update({ order_index: idx })
-						.eq('id', item.id);
-					if (error) throw error;
-				})
-			);
+			const form = new FormData();
+			form.set('table', table);
+			form.set('items', JSON.stringify(items.map((it) => ({ id: it.id }))));
+			const res = await fetch('?/reorder', { method: 'POST', body: form });
+			if (!res.ok) throw new Error(await res.text());
 		} catch (e) {
 			console.error('Failed to save order for', table, e);
 			saveError = 'Failed to save order';
@@ -409,7 +396,7 @@
 					</div>
 				</div>
 			</div>
-			<form method="POST" class="my-4 mt-8" in:fade={{ duration: 100 }}>
+			<form method="POST" action="?/logout" class="my-4 mt-8" in:fade={{ duration: 100 }}>
 				<button type="submit" class="btn rounded-lg bg-red-800 px-2 py-1">Log out</button>
 			</form>
 		{/if}

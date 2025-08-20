@@ -1,7 +1,6 @@
 <script lang="ts">
 	let { closeAddingModal, getData }: { closeAddingModal: () => void; getData: () => void } =
 		$props();
-	import { supabase } from '$lib/supabase';
 	import { SquareX } from '@lucide/svelte';
 
 	let projectName = $state('');
@@ -20,32 +19,26 @@
 
 	let chosen_addition = $state('');
 
-	// Upload multiple images
+	// Upload multiple images via server API (service role)
 	async function uploadMultipleImages(files: FileList) {
 		const fileArray = Array.from(files);
 		const uploadPromises = fileArray.map(async (file: File) => {
-			const fileExt = file.name.split('.').pop();
-			const fileName = `${Math.random()}.${fileExt}`;
-
-			const { data, error } = await supabase.storage.from('images').upload(fileName, file);
-
-			if (error) {
-				console.error('Error uploading:', error);
+			const form = new FormData();
+			form.set('file', file);
+			const res = await fetch('/api/storage/upload', { method: 'POST', body: form });
+			if (!res.ok) {
+				console.error('Error uploading:', await res.text());
 				return null;
 			}
-
-			const {
-				data: { publicUrl }
-			} = supabase.storage.from('images').getPublicUrl(fileName);
-
-			return publicUrl;
+			const json = await res.json();
+			return json.publicUrl as string;
 		});
 
 		const imageUrls = await Promise.all(uploadPromises);
 		return imageUrls.filter((url): url is string => url !== null);
 	}
 
-	// Add project with multiple images
+	// Add project with multiple images (server action)
 	async function addProject(
 		projectName: string,
 		projectDescription: string,
@@ -61,55 +54,24 @@
 		loading = true;
 		const imageUrls = await uploadMultipleImages(projectImages);
 
-		// Try to append to the end of the current order if order_index exists
-		let nextOrderIndex: number | null = null;
-		try {
-			const { data: maxOrder, error: maxErr } = await supabase
-				.from('projects')
-				.select('order_index')
-				.order('order_index', { ascending: false })
-				.limit(1)
-				.single();
-			if (!maxErr && maxOrder && typeof maxOrder.order_index === 'number') {
-				nextOrderIndex = (maxOrder.order_index as number) + 1;
-			}
-		} catch (e) {
-			// ignore, column may not exist yet
-		}
-
-		const newProject: Record<string, unknown> = {
-			name: projectName.trim(),
-			description: projectDescription.trim(),
-			website: projectWebsite.trim(),
-			specifications: projectSpec.trim(),
-			images: imageUrls
-		};
-		if (nextOrderIndex !== null) newProject.order_index = nextOrderIndex;
-
-		const { data, error } = await supabase.from('projects').insert([newProject]);
+		const form = new FormData();
+		form.set('name', projectName.trim());
+		form.set('description', projectDescription.trim());
+		form.set('website', projectWebsite.trim());
+		form.set('specifications', projectSpec.trim());
+		form.set('imageUrls', JSON.stringify(imageUrls));
+		const res = await fetch('?/addProject', { method: 'POST', body: form });
 		loading = false;
-		getData();
-		closeAddingModal();
-		return { data, error };
+		if (res.ok) {
+			getData();
+			closeAddingModal();
+		} else {
+			console.error('Add project failed', await res.text());
+		}
+		return {};
 	}
 
-	// Helpers to get next order_index for lists
-	async function getNextIndex(table: 'coding' | 'experiences' | 'socials'): Promise<number | null> {
-		try {
-			const { data, error } = await supabase
-				.from(table)
-				.select('order_index')
-				.order('order_index', { ascending: false })
-				.limit(1)
-				.single();
-			if (!error && data && typeof data.order_index === 'number') {
-				return (data.order_index as number) + 1;
-			}
-		} catch (_) {}
-		return null;
-	}
-
-	// Add coding
+	// Add coding (server action)
 	async function addCoding(codingDesc: string) {
 		if (!codingDesc) {
 			notFilled = true;
@@ -118,20 +80,20 @@
 		notFilled = false;
 		loading = true;
 
-		const nextIdx = await getNextIndex('coding');
-		const { data, error } = await supabase.from('coding').insert([
-			{
-				description: codingDesc.trim(),
-				...(nextIdx !== null ? { order_index: nextIdx } : {})
-			}
-		]);
+		const form = new FormData();
+		form.set('description', codingDesc.trim());
+		const res = await fetch('?/addCoding', { method: 'POST', body: form });
 		loading = false;
-		getData();
-		closeAddingModal();
-		return { data, error };
+		if (res.ok) {
+			getData();
+			closeAddingModal();
+		} else {
+			console.error('Add coding failed', await res.text());
+		}
+		return {};
 	}
 
-	// Add socials
+	// Add socials (server action)
 	async function addSocials(socialsPlatform: string, social_url: string, socialName: string) {
 		if (!socialsPlatform || !social_url || !socialName) {
 			notFilled = true;
@@ -140,22 +102,22 @@
 		notFilled = false;
 		loading = true;
 
-		const nextIdx = await getNextIndex('socials');
-		const { data, error } = await supabase.from('socials').insert([
-			{
-				platform: socialsPlatform.trim(),
-				social_url: social_url.trim(),
-				social_name: socialName.trim(),
-				...(nextIdx !== null ? { order_index: nextIdx } : {})
-			}
-		]);
+		const form = new FormData();
+		form.set('platform', socialsPlatform.trim());
+		form.set('social_url', social_url.trim());
+		form.set('social_name', socialName.trim());
+		const res = await fetch('?/addSocial', { method: 'POST', body: form });
 		loading = false;
-		getData();
-		closeAddingModal();
-		return { data, error };
+		if (res.ok) {
+			getData();
+			closeAddingModal();
+		} else {
+			console.error('Add social failed', await res.text());
+		}
+		return {};
 	}
 
-	// Add experiences
+	// Add experiences (server action)
 	async function addExperience(experiencesDesc: string) {
 		if (!experiencesDesc) {
 			notFilled = true;
@@ -164,17 +126,17 @@
 		notFilled = false;
 		loading = true;
 
-		const nextIdx = await getNextIndex('experiences');
-		const { data, error } = await supabase.from('experiences').insert([
-			{
-				description: experiencesDesc.trim(),
-				...(nextIdx !== null ? { order_index: nextIdx } : {})
-			}
-		]);
+		const form = new FormData();
+		form.set('description', experiencesDesc.trim());
+		const res = await fetch('?/addExperience', { method: 'POST', body: form });
 		loading = false;
-		getData();
-		closeAddingModal();
-		return { data, error };
+		if (res.ok) {
+			getData();
+			closeAddingModal();
+		} else {
+			console.error('Add experience failed', await res.text());
+		}
+		return {};
 	}
 </script>
 
