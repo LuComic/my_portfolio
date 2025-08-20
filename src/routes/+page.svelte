@@ -22,7 +22,6 @@
 	import { goto } from '$app/navigation';
 
 	let projectsActive = $state(false);
-	let projectModalActive = $state(false);
 
 	let projects: project_type[] = $state([]);
 	let coding: coding_type[] = $state([]);
@@ -80,7 +79,6 @@
 	}
 	getData();
 
-	let project_id = $state(0);
 	let id_from_projects = $state(0);
 
 	$effect(() => {
@@ -92,11 +90,6 @@
 
 	const openProject = (id: number) => {
 		goto(`/${id}`);
-	};
-
-	const closeProjectModal = () => {
-		projectModalActive = false;
-		project_id = 0;
 	};
 
 	const closeProjects = () => {
