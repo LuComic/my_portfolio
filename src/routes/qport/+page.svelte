@@ -4,6 +4,7 @@
 
 	let textSection: HTMLDivElement;
 	let imgContainer: HTMLDivElement;
+	let heroImg: HTMLImageElement;
 	let spacerHeight = 0;
 	let afterSpacerHeight = 0; // ensures sticky can reach the top
 	let fade = 0;
@@ -13,9 +14,11 @@
 		if (!textSection) return;
 		// Position the start just below the fixed image (plus a small gap)
 		const imgRect = imgContainer?.getBoundingClientRect();
-		const gapPx = 70; // adjust gap below image as desired
+		const gapPx = 0; // adjust gap below image as desired
 		if (imgRect) {
-			spacerHeight = Math.max(0, imgRect.bottom - gapPx);
+			const imageHeight = heroImg?.clientHeight || imgRect.height || 0;
+			const bottom = (imgRect.top || 0) + imageHeight;
+			spacerHeight = Math.max(0, bottom - gapPx);
 			// Mirror the pre-spacer after the sticky so it can reach the top offset
 			afterSpacerHeight = spacerHeight;
 		}
@@ -35,9 +38,17 @@
 			// Keep after spacer large enough during resizes
 			afterSpacerHeight = Math.max(afterSpacerHeight, window.innerHeight);
 		});
+		// Safari may report zero heights until the image has laid out
+		const ro =
+			typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => recalculateSpacer()) : null;
+		if (heroImg && ro) ro.observe(heroImg);
+		const onImgLoad = () => recalculateSpacer();
+		if (heroImg && !heroImg.complete) heroImg.addEventListener('load', onImgLoad);
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
 			window.removeEventListener('resize', recalculateSpacer);
+			if (ro) ro.disconnect();
+			if (heroImg) heroImg.removeEventListener('load', onImgLoad);
 		};
 	});
 </script>
@@ -47,6 +58,7 @@
 		<div bind:this={imgContainer} class="fixed top-17 z-0 h-auto md:max-w-[80vw]">
 			<div class="relative flex h-auto w-auto items-center justify-center">
 				<img
+					bind:this={heroImg}
 					src="pictures/qport_homepage.png"
 					alt="homepage"
 					class="h-auto w-full rounded-t-xl object-cover"
@@ -63,7 +75,7 @@
 		<div style="height: {spacerHeight}px"></div>
 		<div
 			bind:this={textSection}
-			class="relative top-20 z-10 flex w-full flex-col items-start justify-start gap-2 md:w-[80vw]"
+			class="sticky top-20 z-10 flex w-full flex-col items-start justify-start gap-2 md:w-[80vw]"
 		>
 			<div
 				class="absolute -z-10 h-full w-full bg-gradient-to-t from-[#18181b] to-[#18181b]/0"
