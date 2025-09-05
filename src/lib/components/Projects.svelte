@@ -21,6 +21,17 @@
 		<p class="text-lg">Projects</p>
 	</button>
 	<div class="flex h-auto w-full flex-col items-start justify-start gap-2 overflow-y-scroll">
+		<a
+			class="flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
+			href="/qport"
+		>
+			<div class="flex flex-col items-start justify-start gap-1">
+				<p class="text-violet-400">qport</p>
+				<p>A simple, fast and cheap portfolio buider</p>
+			</div>
+			<ChevronRight size={18} />
+		</a>
+		<hr class="hr border-zinc-600" />
 		{#each projects as proj (proj.id)}
 			<button
 				class="flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"

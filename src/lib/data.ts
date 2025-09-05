@@ -14,7 +14,7 @@ export const qport_info: qport = {
 		'Pick a template (formal, creative, or mixed)',
 		'Choose a theme and font',
 		'Edit the text fields',
-		"Done -> your portfolio is live at example.com/username You'd also get a simple example.com/username/edit page to update the content later. Because it's so stripped down, the price would also be cheap (€2-5/month) compared to bigger site builders."
+		"Done -> your portfolio is live at example.com/username. You'd also get a simple example.com/username/edit page to update the content later. Because it's so stripped down, the price would also be cheap (€2-5/month) compared to bigger site builders."
 	],
 	why: 'Most portfolio/site builders feel bloated, complex, or too expensive for someone who just wants a quick personal page. qport is aiming at students, job seekers, or freelancers who just need something live fast.',
 	features: [

@@ -142,7 +142,13 @@
 							<ChevronRight size={20} />
 						</button>
 						<div class="flex flex-col items-start justify-start gap-1 text-zinc-400">
-							{#each projects.slice(0, 4) as proj (proj.id)}
+							<a
+								href="/qport"
+								class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"
+								>- <p class="inline text-violet-400">qport:&nbsp</p>
+								A simple, fast and cheap portfolio buider...</a
+							>
+							{#each projects.slice(0, 3) as proj (proj.id)}
 								<button
 									onclick={() => openProject(proj.id)}
 									class="rounded-lg px-2 py-1 text-left duration-125 hover:bg-zinc-950/40"

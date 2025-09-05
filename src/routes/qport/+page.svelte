@@ -80,7 +80,7 @@
 			<div
 				class="absolute -z-10 h-full w-full bg-gradient-to-t from-[#18181b] to-[#18181b]/0"
 			></div>
-			<h1 class="qport flex w-full items-center justify-start gap-1 md:ml-[-30px] md:gap-2">
+			<h1 class="qport mb-2 flex w-full items-center justify-start gap-1 md:ml-[-30px] md:gap-2">
 				<span
 					class="qport_tag text-xl text-slate-700 opacity-100 transition md:text-3xl md:opacity-0"
 				>
