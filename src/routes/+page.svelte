@@ -115,6 +115,10 @@
 				</div>
 				<p>
 					{personal[0]?.bio_text}
+					Check out my
+					<a href="/blog" class="text-violet-400 visited:text-violet-400"
+						>blog and updates on projects</a
+					>!
 				</p>
 				<hr class="hr mt-4 mb-3 border-zinc-600" />
 			</div>
