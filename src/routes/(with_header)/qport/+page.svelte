@@ -30,8 +30,10 @@
 		}
 	});
 
-	const biggestId = Math.max(...blogs.map((blog) => blog.id));
-	const latestVersion = blogs.find((blog) => blog.type === 'qport' && blog.id === biggestId);
+	const latestVersionId = Math.max(
+		...blogs.filter((blog) => blog.type === 'qport').map((blog) => blog.id)
+	);
+	const latestVersion = blogs.find((blog) => blog.id === latestVersionId);
 </script>
 
 <svelte:window bind:scrollY={y} bind:outerWidth />
@@ -121,14 +123,14 @@
 					</span>
 					<span class="w-full text-left text-xl font-medium md:text-2xl">Specific</span>
 				</h2>
-				<span class="flex items-center justify-start gap-1">
-					<span>For updates and more in depth information check out the</span>
+				<p>
+					For updates and more in depth information check out the
 					<a
 						href="/blog"
 						class="text-violet-400 transition visited:text-violet-400 hover:text-violet-500"
 						>qport's blog</a
-					>
-				</span>
+					>.
+				</p>
 				<h3
 					class="features mt-2 flex w-full items-center justify-start gap-1 md:ml-[-50px] md:gap-2"
 				>
