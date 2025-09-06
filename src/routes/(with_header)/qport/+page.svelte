@@ -114,7 +114,7 @@
 				<ul class="pb-20">
 					{#each qport_info.features as feature (feature)}
 						<li>
-							{Object.keys(feature)[0]} - {Object.values(feature)[0]}
+							- {Object.keys(feature)[0]} - {Object.values(feature)[0]}
 						</li>
 					{/each}
 				</ul>
