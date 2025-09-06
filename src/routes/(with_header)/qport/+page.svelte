@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { qport_info } from '$lib/data';
 	import { fade } from 'svelte/transition';
-	import { onMount } from 'svelte';
+	import { blogs } from '$lib/data';
 
 	let y = $state(0);
 	let outerWidth = $state(0);
@@ -29,6 +29,9 @@
 			}
 		}
 	});
+
+	const biggestId = Math.max(...blogs.map((blog) => blog.id));
+	const latestVersion = blogs.find((blog) => blog.type === 'qport' && blog.id === biggestId);
 </script>
 
 <svelte:window bind:scrollY={y} bind:outerWidth />
@@ -68,18 +71,29 @@
 						<span class="w-full text-left text-xl font-medium text-blue-600 md:text-3xl">)</span>
 						<span class="w-full text-left text-xl font-medium md:text-3xl">port</span>
 					</div>
+					<span class="ml-2 rounded-lg border border-green-400 px-2 py-1 text-sm md:ml-0"
+						>{latestVersion?.version}</span
+					>
 				</h1>
 				<p>
 					{qport_info.intro}
 				</p>
-				<h2 class="idea mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2">
+				<h2
+					class="overall mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2"
+				>
 					<span
-						class="idea_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
+						class="overall_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
 					>
 						##
 					</span>
-					<span class="w-full text-left text-xl font-medium md:text-2xl">The Idea</span>
+					<span class="w-full text-left text-xl font-medium md:text-2xl">Overall</span>
 				</h2>
+				<h3 class="idea mt-2 flex w-full items-center justify-start gap-1 md:ml-[-50px] md:gap-2">
+					<span class="idea_tag text-xl text-slate-700 opacity-100 transition md:opacity-0">
+						###
+					</span>
+					<span class="w-full text-left text-xl font-medium">The Idea</span>
+				</h3>
 				<p>
 					{qport_info.idea}
 				</p>
@@ -90,31 +104,56 @@
 						</li>
 					{/each}
 				</ul>
-				<h2 class="why mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2">
-					<span
-						class="why_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
-					>
-						##
+				<h3 class="why mt-2 flex w-full items-center justify-start gap-1 md:ml-[-50px] md:gap-2">
+					<span class="why_tag text-xl text-slate-700 opacity-100 transition md:opacity-0">
+						###
 					</span>
-					<span class="w-full text-left text-xl font-medium md:text-2xl">Why?</span>
-				</h2>
+					<span class="w-full text-left text-xl font-medium">Why?</span>
+				</h3>
 				<p>
 					{qport_info.why}
 				</p>
-				<h2
-					class="features mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2"
-				>
+				<h2 class="spec mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2">
 					<span
-						class="features_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
+						class="spec_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
 					>
 						##
 					</span>
-					<span class="w-full text-left text-xl font-medium md:text-2xl">Features</span>
+					<span class="w-full text-left text-xl font-medium md:text-2xl">Specific</span>
 				</h2>
-				<ul class="pb-20">
+				<span class="flex items-center justify-start gap-1">
+					<span>For updates and more in depth information check out the</span>
+					<a
+						href="/blog"
+						class="text-violet-400 transition visited:text-violet-400 hover:text-violet-500"
+						>qport's blog</a
+					>
+				</span>
+				<h3
+					class="features mt-2 flex w-full items-center justify-start gap-1 md:ml-[-50px] md:gap-2"
+				>
+					<span class="features_tag text-xl text-slate-700 opacity-100 transition md:opacity-0">
+						###
+					</span>
+					<span class="w-full text-left text-xl font-medium">Features</span>
+				</h3>
+				<ul>
 					{#each qport_info.features as feature (feature)}
 						<li>
 							- {Object.keys(feature)[0]} - {Object.values(feature)[0]}
+						</li>
+					{/each}
+				</ul>
+				<h3 class="tech mt-2 flex w-full items-center justify-start gap-1 md:ml-[-50px] md:gap-2">
+					<span class="tech_tag text-xl text-slate-700 opacity-100 transition md:opacity-0">
+						###
+					</span>
+					<span class="w-full text-left text-xl font-medium">Tech Stack</span>
+				</h3>
+				<ul class="pb-20">
+					{#each qport_info.techStack as tech (tech)}
+						<li class="flex items-center justify-start gap-2">
+							- {tech}
 						</li>
 					{/each}
 				</ul>
@@ -137,6 +176,18 @@
 	}
 
 	.features:hover .features_tag {
+		opacity: 1;
+	}
+
+	.tech:hover .tech_tag {
+		opacity: 1;
+	}
+
+	.overall:hover .overall_tag {
+		opacity: 1;
+	}
+
+	.spec:hover .spec_tag {
 		opacity: 1;
 	}
 </style>

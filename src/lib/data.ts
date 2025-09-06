@@ -3,6 +3,7 @@ interface qport {
 	idea: string;
 	process: string[];
 	why: string;
+	techStack: string[];
 	features: Record<string, string>[];
 }
 
@@ -12,6 +13,7 @@ interface blogPost {
 	updateType?: 'Bug' | 'Feature' | 'Progress';
 	title: string;
 	date: string;
+	version?: string;
 	content: string;
 }
 
@@ -34,6 +36,14 @@ export const qport_info: qport = {
 			'Plugin system':
 				'since the page is so bare bones, implementing a plugin system would be useful'
 		}
+	],
+	techStack: [
+		'Frontend - Sveltekit',
+		'Deployment - Vercel',
+		'Auth - Supabase?',
+		'Storage - Supabase?',
+		'Payments - Stripe',
+		'Other - unknown'
 	]
 };
 
@@ -44,6 +54,7 @@ export const blogs: blogPost[] = [
 		updateType: 'Progress',
 		title: 'First qport Progress Report',
 		date: '06.09.2025',
+		version: '0.1.0',
 		content: `I'm gladly announcing this as the first progress report of qport. As of 6th September, qport has just the barebones frontend.
 
 The pages we currently have are: Homepage, partial Account page, Sign in page, Template browsing page and Setup page (includes template picking and customising it).

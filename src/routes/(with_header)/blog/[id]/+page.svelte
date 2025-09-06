@@ -49,6 +49,9 @@
 			<a href="/blog" class="flex items-center justify-start gap-1 visited:text-[#e7e5e4] md:gap-2">
 				<ChevronLeft color="currentColor" />
 				{foundBlog?.title}
+				<span class="ml-2 rounded-lg border border-green-400 px-2 py-1 text-sm md:ml-0"
+					>{foundBlog?.version}</span
+				>
 			</a>
 			{#if foundBlog?.type === 'qport'}
 				<div
