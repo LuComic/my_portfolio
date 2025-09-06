@@ -39,7 +39,7 @@
 	};
 </script>
 
-<div class="flex h-auto min-h-screen w-screen items-start justify-center py-20">
+<div class="flex h-auto min-h-screen w-screen items-start justify-center py-16 md:py-20">
 	<div
 		class="flex h-full w-full flex-col items-start justify-start px-4 py-8 md:w-3/4 md:py-0 lg:w-1/2 lg:py-0 xl:w-1/2 xl:py-0"
 	>
@@ -49,9 +49,11 @@
 			<a href="/blog" class="flex items-center justify-start gap-1 visited:text-[#e7e5e4] md:gap-2">
 				<ChevronLeft color="currentColor" />
 				{foundBlog?.title}
-				<span class="ml-2 rounded-lg border border-green-400 px-2 py-1 text-sm md:ml-0"
-					>{foundBlog?.version}</span
-				>
+				{#if foundBlog?.type === 'qport'}
+					<span class="ml-2 rounded-lg border border-green-400 px-2 py-1 text-sm md:ml-0">
+						{foundBlog?.version}
+					</span>
+				{/if}
 			</a>
 			{#if foundBlog?.type === 'qport'}
 				<div
@@ -70,9 +72,56 @@
 			in:fade={{ duration: 100 }}
 			class="mt-2 flex w-full flex-col items-start justify-start gap-3"
 		>
-			{#each foundBlog?.content?.split('\n').filter((line) => line.trim()) || [] as paragraph}
-				<p class="text-base md:text-lg">{paragraph.trim()}</p>
-			{/each}
+			{#if foundBlog?.content}
+				{#each foundBlog?.content?.split('\n').filter((line) => line.trim()) || [] as paragraph}
+					<p class="text-base md:text-lg">{paragraph.trim()}</p>
+				{/each}
+			{:else if foundBlog?.contentAd1 || foundBlog?.contentAd2 || foundBlog?.contentAd3 || foundBlog?.contentAd4}
+				{#if foundBlog?.contentAd1}
+					{#each foundBlog.contentAd1.split('\n').filter((line) => line.trim()) || [] as paragraph}
+						<p class="text-base md:text-lg">{paragraph.trim()}</p>
+					{/each}
+					{#if foundBlog?.codeAd1}
+						<pre class="rounded-xl bg-zinc-950/60 p-4 text-sm text-gray-100 md:text-base"><code
+								>{foundBlog.codeAd1.trim()}</code
+							></pre>
+					{/if}
+				{/if}
+				{#if foundBlog?.contentAd2}
+					{#each foundBlog.contentAd2.split('\n').filter((line) => line.trim()) || [] as paragraph}
+						<p class="text-base md:text-lg">{paragraph.trim()}</p>
+					{/each}
+					{#if foundBlog?.codeAd2}
+						<pre class="rounded-xl bg-zinc-950/60 p-4 text-sm text-gray-100 md:text-base"><code
+								>{foundBlog.codeAd2.trim()}</code
+							></pre>
+					{/if}
+				{/if}
+				{#if foundBlog?.contentAd3}
+					{#each foundBlog.contentAd3.split('\n').filter((line) => line.trim()) || [] as paragraph}
+						<p class="text-base md:text-lg">{paragraph.trim()}</p>
+					{/each}
+					{#if foundBlog?.codeAd3}
+						<pre
+							class="overflow-x-auto rounded-xl bg-zinc-950/60 p-4 text-sm text-gray-100 md:text-base"><code
+								>{foundBlog.codeAd3.trim()}</code
+							></pre>
+					{/if}
+				{/if}
+				{#if foundBlog?.contentAd4}
+					{#each foundBlog.contentAd4.split('\n').filter((line) => line.trim()) || [] as paragraph}
+						<p class="text-base md:text-lg">{paragraph.trim()}</p>
+					{/each}
+					{#if foundBlog?.codeAd4}
+						<pre
+							class="overflow-x-auto rounded-xl bg-zinc-950/60 p-4 text-sm text-gray-100 md:text-base"><code
+								>{foundBlog.codeAd4.trim()}</code
+							></pre>
+					{/if}
+				{/if}
+			{:else}
+				<p>Bazinga!</p>
+			{/if}
 		</div>
 		<hr class="hr mt-4 mb-5 border-zinc-600" />
 		<div class="flex items-center justify-start gap-2">

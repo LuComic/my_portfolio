@@ -45,3 +45,16 @@ h3 {
 	outline: none !important;
 	box-shadow: none !important;
 }
+
+/* Responsive code blocks */
+pre {
+	max-width: 100%;
+	width: 100%;
+	overflow-x: auto;
+}
+
+pre code {
+	white-space: pre-wrap;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+}

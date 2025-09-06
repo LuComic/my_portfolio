@@ -15,7 +15,7 @@
 	};
 </script>
 
-<div class="flex h-auto min-h-screen w-screen items-start justify-center py-20">
+<div class="flex h-auto min-h-screen w-screen items-start justify-center py-16 md:py-20">
 	<div
 		class="flex h-full w-full flex-col items-start justify-start px-4 py-8 md:w-3/4 md:py-0 lg:w-1/2 lg:py-0 xl:w-1/2 xl:py-0"
 	>
