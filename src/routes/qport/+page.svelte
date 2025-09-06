@@ -1,149 +1,125 @@
 <script lang="ts">
 	import { qport_info } from '$lib/data';
+	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 
-	let textSection: HTMLDivElement;
-	let imgContainer: HTMLDivElement;
-	let heroImg: HTMLImageElement;
-	let spacerHeight = 0;
-	let afterSpacerHeight = 0; // ensures sticky can reach the top
-	let fade = 0;
-	const FADE_DISTANCE = 450; // px scrolled to reach full darkness
+	let y = $state(0);
+	let outerWidth = $state(0);
+	let fullDark = $state(false);
+	let isMobile = $state(false);
 
-	function recalculateSpacer() {
-		if (!textSection) return;
-		// Position the start just below the fixed image (plus a small gap)
-		const imgRect = imgContainer?.getBoundingClientRect();
-		const gapPx = 0; // adjust gap below image as desired
-		if (imgRect) {
-			const imageHeight = heroImg?.clientHeight || imgRect.height || 0;
-			const bottom = (imgRect.top || 0) + imageHeight;
-			spacerHeight = Math.max(0, bottom - gapPx);
-			// Mirror the pre-spacer after the sticky so it can reach the top offset
-			afterSpacerHeight = spacerHeight;
+	$effect(() => {
+		if (outerWidth > 600) {
+			isMobile = false;
+		} else {
+			isMobile = true;
 		}
-	}
 
-	onMount(() => {
-		recalculateSpacer();
-		// Ensure there's always at least one viewport height after the sticky
-		afterSpacerHeight = Math.max(afterSpacerHeight, window.innerHeight);
-		const handleScroll = () => {
-			fade = Math.min(1, window.scrollY / FADE_DISTANCE);
-		};
-		handleScroll();
-		window.addEventListener('scroll', handleScroll);
-		window.addEventListener('resize', () => {
-			recalculateSpacer();
-			// Keep after spacer large enough during resizes
-			afterSpacerHeight = Math.max(afterSpacerHeight, window.innerHeight);
-		});
-		// Safari may report zero heights until the image has laid out
-		const ro =
-			typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => recalculateSpacer()) : null;
-		if (heroImg && ro) ro.observe(heroImg);
-		const onImgLoad = () => recalculateSpacer();
-		if (heroImg && !heroImg.complete) heroImg.addEventListener('load', onImgLoad);
-		return () => {
-			window.removeEventListener('scroll', handleScroll);
-			window.removeEventListener('resize', recalculateSpacer);
-			if (ro) ro.disconnect();
-			if (heroImg) heroImg.removeEventListener('load', onImgLoad);
-		};
+		if (isMobile) {
+			if (y > 225) {
+				fullDark = true;
+			} else {
+				fullDark = false;
+			}
+		} else {
+			if (y > 325) {
+				fullDark = true;
+			} else {
+				fullDark = false;
+			}
+		}
 	});
 </script>
 
-<div class="flex h-auto min-h-screen w-screen items-start justify-center">
-	<div class="flex w-full flex-col items-start justify-start gap-2 px-4 pb-8 md:w-[80vw] md:gap-4">
-		<div bind:this={imgContainer} class="fixed top-17 z-0 h-auto md:max-w-[80vw]">
-			<div class="relative flex h-auto w-auto items-center justify-center">
-				<img
-					bind:this={heroImg}
-					src="pictures/qport_homepage.png"
-					alt="homepage"
-					class="h-auto w-full rounded-t-xl object-cover"
-				/>
-				<div class="absolute h-full w-full bg-linear-to-t from-[#18181b] to-[#18181b]/0"></div>
-				<!-- Darkening overlay over the image (behind text) -->
-				<div
-					class="pointer-events-none absolute inset-0 h-full w-full bg-[#18181b]"
-					style="opacity: {fade * 1};"
-				></div>
+<svelte:window bind:scrollY={y} bind:outerWidth />
+
+<div class="my-8 flex h-auto min-h-screen w-screen items-start justify-center">
+	<div
+		class="flex h-full w-full flex-col items-start justify-start gap-2 px-4 pb-8 md:w-[80vw] md:gap-4"
+	>
+		{#if !fullDark}
+			<div
+				class="fixed top-13 z-0 h-1/2 transition md:h-2/3 md:max-w-[80vw]"
+				transition:fade={{ duration: 150 }}
+			>
+				<div class="relative flex h-full w-auto items-center justify-center">
+					<img
+						src="pictures/qport_homepage.png"
+						alt="homepage"
+						class="h-auto w-full rounded-t-xl object-cover"
+					/>
+					<div class="absolute h-full w-full bg-linear-to-t from-[#18181b] to-[#18181b]/0"></div>
+				</div>
+			</div>
+		{/if}
+		<div class="flex h-screen w-full flex-col items-center justify-start md:w-[80vw]">
+			<div class="h-1/2 w-full bg-transparent md:h-2/3"></div>
+			<div class="z-10 flex h-1/2 w-full flex-col items-start justify-start gap-2 md:h-1/3">
+				<h1 class="qport mb-2 flex w-full items-center justify-start gap-1 md:ml-[-30px] md:gap-2">
+					<span
+						class="qport_tag text-xl text-slate-700 opacity-100 transition md:text-3xl md:opacity-0"
+					>
+						#
+					</span>
+					<div class="flex items-center justify-center gap-1">
+						<span class="w-full text-left text-xl font-medium md:text-3xl">q</span>
+						<span class="w-full text-left text-xl font-medium text-blue-600 md:text-3xl">(</span>
+						<span class="w-full text-left text-xl font-medium md:text-3xl">uick</span>
+						<span class="w-full text-left text-xl font-medium text-blue-600 md:text-3xl">)</span>
+						<span class="w-full text-left text-xl font-medium md:text-3xl">port</span>
+					</div>
+				</h1>
+				<p>
+					{qport_info.intro}
+				</p>
+				<h2 class="idea mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2">
+					<span
+						class="idea_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
+					>
+						##
+					</span>
+					<span class="w-full text-left text-xl font-medium md:text-2xl">The Idea</span>
+				</h2>
+				<p>
+					{qport_info.idea}
+				</p>
+				<ul>
+					{#each qport_info.process as process (process)}
+						<li class="flex items-center justify-start gap-2">
+							- {process}
+						</li>
+					{/each}
+				</ul>
+				<h2 class="why mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2">
+					<span
+						class="why_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
+					>
+						##
+					</span>
+					<span class="w-full text-left text-xl font-medium md:text-2xl">Why?</span>
+				</h2>
+				<p>
+					{qport_info.why}
+				</p>
+				<h2
+					class="features mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2"
+				>
+					<span
+						class="features_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
+					>
+						##
+					</span>
+					<span class="w-full text-left text-xl font-medium md:text-2xl">Features</span>
+				</h2>
+				<ul class="pb-20">
+					{#each qport_info.features as feature (feature)}
+						<li>
+							{Object.keys(feature)[0]} - {Object.values(feature)[0]}
+						</li>
+					{/each}
+				</ul>
 			</div>
 		</div>
-		<!-- Dynamic spacer to position start below fixed image -->
-		<div style="height: {spacerHeight}px"></div>
-		<div
-			bind:this={textSection}
-			class="sticky top-20 z-10 flex w-full flex-col items-start justify-start gap-2 md:w-[80vw]"
-		>
-			<div
-				class="absolute -z-10 h-full w-full bg-gradient-to-t from-[#18181b] to-[#18181b]/0"
-			></div>
-			<h1 class="qport mb-2 flex w-full items-center justify-start gap-1 md:ml-[-30px] md:gap-2">
-				<span
-					class="qport_tag text-xl text-slate-700 opacity-100 transition md:text-3xl md:opacity-0"
-				>
-					#
-				</span>
-				<div class="flex items-center justify-center gap-1">
-					<span class="w-full text-left text-xl font-medium md:text-3xl">q</span>
-					<span class="w-full text-left text-xl font-medium text-blue-600 md:text-3xl">(</span>
-					<span class="w-full text-left text-xl font-medium md:text-3xl">uick</span>
-					<span class="w-full text-left text-xl font-medium text-blue-600 md:text-3xl">)</span>
-					<span class="w-full text-left text-xl font-medium md:text-3xl">port</span>
-				</div>
-			</h1>
-			<p>
-				{qport_info.intro}
-			</p>
-			<h2 class="idea mt-2 flex w-full items-center justify-start gap-1 md:ml-[-43px] md:gap-2">
-				<span
-					class="idea_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
-				>
-					##
-				</span>
-				<span class="w-full text-left text-xl font-medium md:text-2xl">The Idea</span>
-			</h2>
-			<p>
-				{qport_info.idea}
-			</p>
-			<ul>
-				{#each qport_info.process as process (process)}
-					<li class="flex items-center justify-start gap-2">
-						- {process}
-					</li>
-				{/each}
-			</ul>
-			<h2 class="why mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2">
-				<span
-					class="why_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
-				>
-					##
-				</span>
-				<span class="w-full text-left text-xl font-medium md:text-2xl">Why?</span>
-			</h2>
-			<p>
-				{qport_info.why}
-			</p>
-			<h2 class="features mt-2 flex w-full items-center justify-start gap-1 md:ml-[-42px] md:gap-2">
-				<span
-					class="features_tag text-xl text-slate-700 opacity-100 transition md:text-2xl md:opacity-0"
-				>
-					##
-				</span>
-				<span class="w-full text-left text-xl font-medium md:text-2xl">Features</span>
-			</h2>
-			<ul>
-				{#each qport_info.features as feature (feature)}
-					<li>
-						{Object.keys(feature)[0]} - {Object.values(feature)[0]}
-					</li>
-				{/each}
-			</ul>
-		</div>
-		<!-- Bottom spacer so sticky can reach the top offset -->
-		<div style="height: {afterSpacerHeight}px"></div>
 	</div>
 </div>
 
