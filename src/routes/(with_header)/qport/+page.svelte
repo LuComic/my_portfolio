@@ -16,7 +16,7 @@
 		}
 
 		if (isMobile) {
-			if (y > 225) {
+			if (y > 125) {
 				fullDark = true;
 			} else {
 				fullDark = false;
@@ -44,7 +44,7 @@
 	>
 		{#if !fullDark}
 			<div
-				class="fixed top-13 z-0 h-1/2 transition md:h-2/3 md:max-w-[80vw]"
+				class="fixed top-13 z-0 h-1/3 transition md:h-2/3 md:max-w-[80vw]"
 				transition:fade={{ duration: 150 }}
 			>
 				<div class="relative flex h-full w-auto items-center justify-center">
@@ -58,8 +58,8 @@
 			</div>
 		{/if}
 		<div class="flex h-screen w-full flex-col items-center justify-start md:w-[80vw]">
-			<div class="h-1/2 w-full bg-transparent md:h-2/3"></div>
-			<div class="z-10 flex h-1/2 w-full flex-col items-start justify-start gap-2 md:h-1/3">
+			<div class="h-2/6 w-full bg-transparent md:h-2/3"></div>
+			<div class="z-10 flex h-4/6 w-full flex-col items-start justify-start gap-2 md:h-1/3">
 				<h1 class="qport mb-2 flex w-full items-center justify-start gap-1 md:ml-[-30px] md:gap-2">
 					<span
 						class="qport_tag text-xl text-slate-700 opacity-100 transition md:text-3xl md:opacity-0"
