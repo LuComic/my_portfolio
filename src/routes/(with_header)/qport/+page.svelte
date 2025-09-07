@@ -22,7 +22,7 @@
 				fullDark = false;
 			}
 		} else {
-			if (y > 325) {
+			if (y > 300) {
 				fullDark = true;
 			} else {
 				fullDark = false;
