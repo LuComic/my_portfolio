@@ -16,7 +16,7 @@
 		}
 
 		if (isMobile) {
-			if (y > 125) {
+			if (y > 100) {
 				fullDark = true;
 			} else {
 				fullDark = false;
@@ -44,14 +44,16 @@
 	>
 		{#if !fullDark}
 			<div
-				class="fixed top-13 z-0 h-1/3 transition md:h-2/3 md:max-w-[80vw]"
+				class="fixed inset-x-0 top-18 z-0 h-1/3 w-full px-4 transition md:mx-4 md:h-2/3 md:px-0"
 				transition:fade={{ duration: 150 }}
 			>
-				<div class="relative flex h-full w-auto items-center justify-center">
+				<div
+					class="relative mx-auto flex h-full w-full items-center justify-center overflow-hidden rounded-t-xl md:w-[80vw]"
+				>
 					<img
 						src="pictures/qport_homepage.png"
 						alt="homepage"
-						class="h-auto w-full rounded-t-xl object-cover"
+						class="h-full w-full object-cover"
 					/>
 					<div class="absolute h-full w-full bg-linear-to-t from-[#18181b] to-[#18181b]/0"></div>
 				</div>
