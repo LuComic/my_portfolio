@@ -132,6 +132,14 @@
 						class="text-violet-400 transition visited:text-violet-400 hover:text-violet-500"
 						>qport's blog</a
 					>.
+					<br />
+					News, polls etc, are available at
+					<a
+						href="https://x.com/qportSU"
+						target="_blank"
+						class="text-violet-400 transition visited:text-violet-400 hover:text-violet-500"
+						>qport's X</a
+					>.
 				</p>
 				<h3
 					class="features mt-2 flex w-full items-center justify-start gap-1 md:ml-[-50px] md:gap-2"
