@@ -116,7 +116,9 @@
 				<p>
 					{personal[0]?.bio_text}
 					Check out my
-					<a href="/blog" class="text-violet-400 visited:text-violet-400"
+					<a
+						href="/blog"
+						class="text-violet-400 transition visited:text-violet-400 hover:text-violet-500"
 						>blog and updates on projects</a
 					>!
 				</p>

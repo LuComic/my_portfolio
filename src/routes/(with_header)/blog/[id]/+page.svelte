@@ -44,7 +44,7 @@
 		class="flex h-full w-full flex-col items-start justify-start px-4 py-8 md:w-3/4 md:py-0 lg:w-1/2 lg:py-0 xl:w-1/2 xl:py-0"
 	>
 		<h1
-			class="mt-4 flex w-full items-center justify-between text-lg font-medium text-[#e7e5e4] visited:text-[#e7e5e4] md:text-xl"
+			class="mt-4 flex w-full items-center justify-between gap-4 text-lg font-medium text-[#e7e5e4] visited:text-[#e7e5e4] md:text-xl"
 		>
 			<a href="/blog" class="flex items-center justify-start gap-1 visited:text-[#e7e5e4] md:gap-2">
 				<ChevronLeft color="currentColor" />
