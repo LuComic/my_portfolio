@@ -51,7 +51,7 @@
 					class="relative mx-auto flex h-full w-full items-center justify-center overflow-hidden rounded-t-xl md:w-[80vw]"
 				>
 					<img
-						src="pictures/qport_homepage.png"
+						src="pictures/qportBanner copy.png"
 						alt="homepage"
 						class="h-full w-full object-cover"
 					/>
