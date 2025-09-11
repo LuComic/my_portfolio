@@ -2,6 +2,7 @@
 @plugin '@tailwindcss/typography';
 @import '@skeletonlabs/skeleton';
 @import '@fontsource-variable/rubik';
+@import '@fontsource/old-standard-tt';
 @source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
 
 body {

@@ -127,12 +127,12 @@
 		<div class="flex items-center justify-start gap-2">
 			<button
 				onclick={goToPrevious}
-				class="btn rounded-lg border border-zinc-400 hover:border-violet-400 hover:text-violet-400"
+				class="btn rounded-lg border border-zinc-400 transition hover:border-violet-400 hover:text-violet-400"
 				>Previous</button
 			>
 			<button
 				onclick={goToNext}
-				class="btn rounded-lg border border-zinc-400 hover:border-violet-400 hover:text-violet-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-zinc-400 disabled:hover:text-zinc-400"
+				class="btn rounded-lg border border-zinc-400 transition hover:border-violet-400 hover:text-violet-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-zinc-400 disabled:hover:text-zinc-400"
 				disabled={!nextBlog}>Next</button
 			>
 		</div>
