@@ -147,7 +147,7 @@
 			<p>Back to modern</p>
 		</button>
 		<button
-			class={`xp-task-btn flex h-full items-center gap-2 px-3 ${codingOpen ? 'is-active' : ''}`}
+			class={`xp-task-btn flex h-full items-center gap-2 pr-3 ${codingOpen ? 'is-active' : ''}`}
 			onclick={() => {
 				bringModalToFront('coding');
 				codingOpen = true;
@@ -157,7 +157,7 @@
 			<p>Coding</p>
 		</button>
 		<button
-			class={`xp-task-btn flex h-full items-center gap-2 px-3 ${projectsOpen ? 'is-active' : ''}`}
+			class={`xp-task-btn flex h-full items-center gap-2 pr-3 ${projectsOpen ? 'is-active' : ''}`}
 			onclick={() => {
 				bringModalToFront('projects');
 				projectsOpen = true;
@@ -167,7 +167,7 @@
 			<p>Projects</p>
 		</button>
 		<button
-			class={`xp-task-btn flex h-full items-center gap-2 px-3 ${experiencesOpen ? 'is-active' : ''}`}
+			class={`xp-task-btn flex h-full items-center gap-2 pr-3 ${experiencesOpen ? 'is-active' : ''}`}
 			onclick={() => {
 				bringModalToFront('experiences');
 				experiencesOpen = true;
@@ -177,7 +177,7 @@
 			<p>Experiences</p>
 		</button>
 		<button
-			class={`xp-task-btn flex h-full items-center gap-2 px-3 ${socialsOpen ? 'is-active' : ''}`}
+			class={`xp-task-btn flex h-full items-center gap-2 pr-3 ${socialsOpen ? 'is-active' : ''}`}
 			onclick={() => {
 				bringModalToFront('socials');
 				socialsOpen = true;
