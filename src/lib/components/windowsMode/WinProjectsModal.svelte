@@ -58,22 +58,17 @@
 	{onmousedown}
 	role="dialog"
 	tabindex="-1"
-	class="absolute flex h-auto max-h-[500px] min-h-[300px] w-[500px] max-w-[500px] flex-col items-start justify-start overflow-scroll rounded-md border-t-2 border-t-[#9cbbf3] bg-[#1B5CD8] px-1 pb-1 shadow-lg"
+	class="xp-window xp-font absolute flex h-[400px] min-h-[300px] w-[500px] max-w-[500px] flex-col"
 	style="left: {left}px; top: {top}px; z-index: {zIndex};"
 >
-	<div class="flex w-full items-center justify-between px-1 py-1">
-		<p class="font-bold">Projects</p>
-		<button
-			onclick={closeProjects}
-			class="h-6 w-6 border border-white bg-[#EE715E] text-white hover:bg-[#ca5f4e]">X</button
-		>
+	<div class="xp-titlebar">
+		<p class="xp-title">Projects</p>
+		<button onclick={closeProjects} class="xp-close-btn">✕</button>
 	</div>
-	<div
-		class="flex w-full flex-1 flex-col items-start justify-start rounded-md bg-white p-2 text-black"
-	>
+	<div class="xp-window-body flex w-auto flex-1 flex-col items-start justify-start overflow-scroll">
 		{#each projects as proj (proj.id)}
 			<button
-				class="flex w-full items-center justify-between px-1 hover:bg-black/10"
+				class="flex w-full items-center justify-between px-1 py-1 hover:bg-black/10"
 				onclick={() => toggleProj(proj.id)}
 			>
 				{proj.name}

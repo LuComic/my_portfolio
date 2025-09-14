@@ -59,3 +59,98 @@ pre code {
 	word-break: break-word;
 	overflow-wrap: anywhere;
 }
+
+/* Windows XP UI styling */
+.xp-font {
+	font-family: Tahoma, Verdana, 'Segoe UI', sans-serif;
+}
+
+/* Taskbar */
+.xp-taskbar {
+	background: linear-gradient(to top, #245edb 0%, #2e6be6 55%, #3c7cf3 100%);
+	border-top: 1px solid #0b3ea1;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.xp-start-btn {
+	background: linear-gradient(to bottom, #5ec65e 0%, #3fa83f 50%, #2f8e2f 100%);
+	border: 1px solid #1f6b1f;
+	border-top-color: #92da92;
+	border-radius: 8px;
+	color: #ffffff;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.5),
+		0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.xp-start-btn:hover {
+	filter: brightness(1.05);
+}
+
+.xp-task-btn {
+	background: linear-gradient(to bottom, #eef6ff 0%, #b7d2ff 48%, #7da8f7 100%);
+	border: 1px solid #2b63c8;
+	border-top-color: #c7dafd;
+	border-radius: 8px;
+	color: #0b214a;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.xp-task-btn:hover {
+	filter: brightness(1.03);
+}
+.xp-task-btn.is-active {
+	background: linear-gradient(to bottom, #a6c5ff 0%, #6e98f2 55%, #4f7fe9 100%);
+}
+
+/* Window */
+.xp-window {
+	border: 1px solid #003c74;
+	border-radius: 6px;
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+	overflow: auto;
+	background: #f0f0f0;
+}
+
+.xp-titlebar {
+	background: linear-gradient(90deg, #1b5cd8 0%, #3f89f1 50%, #8bbbf9 100%);
+	color: #ffffff;
+	padding: 6px 8px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid #0b3ea1;
+	user-select: none;
+}
+
+.xp-titlebar .xp-title {
+	font-weight: 700;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.xp-close-btn {
+	width: 22px;
+	height: 22px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(to bottom, #f07668 0%, #d14436 60%, #b2352a 100%);
+	border: 1px solid #6f1f1a;
+	border-top-color: #f4a39a;
+	border-radius: 3px;
+	color: #ffffff;
+	font-weight: 700;
+	line-height: 1;
+}
+.xp-close-btn:hover {
+	filter: brightness(1.05);
+}
+
+.xp-window-body {
+	background: #ffffff;
+	color: #000000;
+	border: 1px solid #9eb6e6;
+	margin: 6px;
+	border-radius: 4px;
+	padding: 8px;
+}

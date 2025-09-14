@@ -86,7 +86,7 @@
 	});
 </script>
 
-<div class="flex h-screen w-full items-start justify-start gap-4 bg-black select-none">
+<div class="xp-font flex h-screen w-full items-start justify-start gap-4 bg-black select-none">
 	{#if bioOpen}
 		<BioModal {closeBio} {personal} {modalOrder} {bringModalToFront} />
 	{/if}
@@ -141,52 +141,49 @@
 		</button>
 	</div>
 	<div
-		class="absolute bottom-0 left-0 z-20 flex h-12 w-full items-center justify-start gap-1 bg-[#245DDB] p-1"
+		class="xp-taskbar absolute bottom-0 left-0 z-20 flex h-12 w-full items-center justify-start gap-1 p-1"
 	>
-		<button
-			class="flex h-full w-auto items-center justify-start rounded-lg border-t-4 border-t-[#71c171] bg-[#459D45] px-2 hover:bg-[#478b47]"
-			onclick={goBackToTheModernDay}
-		>
+		<button class="xp-start-btn flex h-full items-center gap-2 px-3" onclick={goBackToTheModernDay}>
 			<p>Back to modern</p>
 		</button>
 		<button
-			class={`flex h-full w-auto items-center justify-start rounded-lg border-t-4 border-t-[#96beed] py-1 pr-40 hover:bg-[#4f78f2] ${codingOpen ? 'bg-[#4f78f2]' : 'bg-[#4F9AF2]'}`}
+			class={`xp-task-btn flex h-full items-center gap-2 px-3 ${codingOpen ? 'is-active' : ''}`}
 			onclick={() => {
 				bringModalToFront('coding');
 				codingOpen = true;
 			}}
 		>
-			<img src="pictures/windows_coding.png" alt="coding" class="h-auto w-[60px]" />
+			<img src="pictures/windows_coding.png" alt="coding" class="h-auto w-[50px]" />
 			<p>Coding</p>
 		</button>
 		<button
-			class={`flex h-full w-auto items-center justify-start rounded-lg border-t-4 border-t-[#96beed] py-1 pr-40 hover:bg-[#4f78f2] ${projectsOpen ? 'bg-[#4f78f2]' : 'bg-[#4F9AF2]'}`}
+			class={`xp-task-btn flex h-full items-center gap-2 px-3 ${projectsOpen ? 'is-active' : ''}`}
 			onclick={() => {
 				bringModalToFront('projects');
 				projectsOpen = true;
 			}}
 		>
-			<img src="pictures/windows_projects.png" alt="coding" class="h-auto w-[60px]" />
+			<img src="pictures/windows_projects.png" alt="coding" class="h-auto w-[50px]" />
 			<p>Projects</p>
 		</button>
 		<button
-			class={`flex h-full w-auto items-center justify-start rounded-lg border-t-4 border-t-[#96beed] py-1 pr-40 hover:bg-[#4f78f2] ${experiencesOpen ? 'bg-[#4f78f2]' : 'bg-[#4F9AF2]'}`}
+			class={`xp-task-btn flex h-full items-center gap-2 px-3 ${experiencesOpen ? 'is-active' : ''}`}
 			onclick={() => {
 				bringModalToFront('experiences');
 				experiencesOpen = true;
 			}}
 		>
-			<img src="pictures/windows_experiences.png" alt="coding" class="h-auto w-[60px]" />
+			<img src="pictures/windows_experiences.png" alt="coding" class="h-auto w-[50px]" />
 			<p>Experiences</p>
 		</button>
 		<button
-			class={`flex h-full w-auto items-center justify-start rounded-lg border-t-4 border-t-[#96beed] py-1 pr-40 hover:bg-[#4f78f2] ${socialsOpen ? 'bg-[#4f78f2]' : 'bg-[#4F9AF2]'}`}
+			class={`xp-task-btn flex h-full items-center gap-2 px-3 ${socialsOpen ? 'is-active' : ''}`}
 			onclick={() => {
 				bringModalToFront('socials');
 				socialsOpen = true;
 			}}
 		>
-			<img src="pictures/windows_info.png" alt="coding" class="h-auto w-[60px]" />
+			<img src="pictures/windows_info.png" alt="coding" class="h-auto w-[50px]" />
 			<p>Socials</p>
 		</button>
 	</div>
