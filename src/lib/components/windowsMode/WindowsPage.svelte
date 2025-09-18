@@ -7,22 +7,18 @@
 		footer_type,
 		personal_type
 	} from '$lib/types';
+	import {
+		loadCoding,
+		loadExperiences,
+		loadFooter,
+		loadPersonal,
+		loadProjects,
+		loadSocials
+	} from '$lib/supabase_data.svelte';
 	const {
-		goBackToTheModernDay,
-		personal,
-		coding,
-		experiences,
-		socials,
-		footer,
-		projects
+		goBackToTheModernDay
 	}: {
 		goBackToTheModernDay: () => void;
-		personal: personal_type[];
-		coding: coding_type[];
-		experiences: experiences_type[];
-		socials: social_type[];
-		footer: footer_type[];
-		projects: project_type[];
 	} = $props();
 	import BioModal from './BioModal.svelte';
 	import CodingModal from './CodingModal.svelte';
@@ -38,6 +34,24 @@
 	let socialsOpen = $state(false);
 	let informationOpen = $state(false);
 	let projectsOpen = $state(false);
+
+	let projects: project_type[] = $state([]);
+	let coding: coding_type[] = $state([]);
+	let experiences: experiences_type[] = $state([]);
+	let socials: social_type[] = $state([]);
+	let personal: personal_type[] = $state([]);
+	let footer: footer_type[] = $state([]);
+
+	async function getData() {
+		projects = await loadProjects();
+		coding = await loadCoding();
+		experiences = await loadExperiences();
+		socials = await loadSocials();
+		personal = await loadPersonal();
+		footer = await loadFooter();
+	}
+
+	getData();
 
 	// Track modal order for stacking
 	let modalOrder = $state<string[]>([]);

@@ -171,15 +171,7 @@
 				<Progress value={loadingProgress} max={100} meterBg="bg-green-500" />
 			</div>
 		{:else}
-			<WindowsPage
-				{goBackToTheModernDay}
-				{personal}
-				{coding}
-				{experiences}
-				{socials}
-				{footer}
-				{projects}
-			/>
+			<WindowsPage {goBackToTheModernDay} />
 		{/if}
 	{:else}
 		<div
