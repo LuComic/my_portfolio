@@ -141,13 +141,14 @@
 		if (windowsMode) {
 			document.documentElement.style.fontFamily = coralPixels;
 			document.body.style.fontFamily = coralPixels;
-			document.body.style.cursor = 'url("/pictures/cursor.jpeg"), auto';
 		} else {
 			document.documentElement.style.fontFamily = rubik;
 			document.body.style.fontFamily = rubik;
-			document.body.style.cursor = 'default';
 		}
 	});
+
+	// Height for the projects component
+	let projectsHeight = $state(0);
 </script>
 
 <svelte:window bind:outerWidth />
@@ -201,11 +202,12 @@
 					<hr class="hr mt-4 mb-3 border-zinc-600" />
 				</div>
 				{#if projectsActive}
-					<Projects bind:id_from_projects {closeProjects} {projects} />
+					<Projects bind:id_from_projects {closeProjects} {projects} {projectsHeight} />
 				{:else}
 					<div
 						in:fade={{ duration: 200 }}
-						class="flex w-full flex-col gap-3 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4 xl:grid xl:grid-cols-4"
+						class="flex w-full flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-4"
+						bind:clientHeight={projectsHeight}
 					>
 						<div class="cursor-default">
 							<p class="mb-1 px-2 py-1 text-lg">Coding</p>

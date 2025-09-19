@@ -2,15 +2,22 @@
 	let {
 		closeProjects,
 		id_from_projects = $bindable(),
-		projects
-	}: { closeProjects: () => void; id_from_projects: number; projects: project_type[] } = $props();
+		projects,
+		projectsHeight
+	}: {
+		closeProjects: () => void;
+		id_from_projects: number;
+		projects: project_type[];
+		projectsHeight: number;
+	} = $props();
 	import { ChevronLeft, ChevronRight } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 	import type { project_type } from '$lib/types';
 </script>
 
 <div
-	class="flex h-auto max-h-[50vh] w-full flex-col items-start justify-start gap-2"
+	class="flex w-full flex-col items-start justify-start gap-2"
+	style:height={`${projectsHeight}px`}
 	in:fade={{ duration: 200 }}
 >
 	<button
