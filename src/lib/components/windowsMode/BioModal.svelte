@@ -3,12 +3,12 @@
 
 	const {
 		closeBio,
-		personal,
+		bio,
 		modalOrder,
 		bringModalToFront
 	}: {
 		closeBio: () => void;
-		personal: personal_type[];
+		bio: personal_type[];
 		modalOrder: string[];
 		bringModalToFront: (modalName: string) => void;
 	} = $props();
@@ -52,6 +52,6 @@
 		<button onclick={closeBio} class="xp-close-btn">✕</button>
 	</div>
 	<div class="xp-window-body flex w-auto flex-1 items-start justify-start">
-		{personal[0]?.bio_text}
+		{bio[0]?.bio_text}
 	</div>
 </div>

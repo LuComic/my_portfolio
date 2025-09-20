@@ -3,7 +3,7 @@
 	import { Accordion } from '@skeletonlabs/skeleton-svelte';
 	import { Rabbit, FileUser } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
-	import { blogs } from '$lib/data';
+	import { blogs } from '$lib/blogs';
 
 	let value = $state(['']);
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/state';
-	import { blogs } from '$lib/data';
+	import { blogs } from '$lib/blogs';
 	import { ChevronLeft } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 

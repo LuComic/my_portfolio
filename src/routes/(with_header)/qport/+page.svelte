@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { qport_info } from '$lib/data';
+	import { qport_info } from '$lib/blogs';
 	import { fade } from 'svelte/transition';
-	import { blogs } from '$lib/data';
+	import { blogs } from '$lib/blogs';
 
 	let y = $state(0);
 	let outerWidth = $state(0);

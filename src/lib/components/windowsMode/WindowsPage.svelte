@@ -1,20 +1,4 @@
 <script lang="ts">
-	import type {
-		project_type,
-		coding_type,
-		social_type,
-		experiences_type,
-		footer_type,
-		personal_type
-	} from '$lib/types';
-	import {
-		loadCoding,
-		loadExperiences,
-		loadFooter,
-		loadPersonal,
-		loadProjects,
-		loadSocials
-	} from '$lib/supabase_data.svelte';
 	const {
 		goBackToTheModernDay
 	}: {
@@ -28,30 +12,14 @@
 	import WinProjectsModal from './WinProjectsModal.svelte';
 	import { onMount, onDestroy } from 'svelte';
 
+	import { projects, socials, bio, footer, experiences, coding } from '$lib/info';
+
 	let bioOpen = $state(false);
 	let codingOpen = $state(false);
 	let experiencesOpen = $state(false);
 	let socialsOpen = $state(false);
 	let informationOpen = $state(false);
 	let projectsOpen = $state(false);
-
-	let projects: project_type[] = $state([]);
-	let coding: coding_type[] = $state([]);
-	let experiences: experiences_type[] = $state([]);
-	let socials: social_type[] = $state([]);
-	let personal: personal_type[] = $state([]);
-	let footer: footer_type[] = $state([]);
-
-	async function getData() {
-		projects = await loadProjects();
-		coding = await loadCoding();
-		experiences = await loadExperiences();
-		socials = await loadSocials();
-		personal = await loadPersonal();
-		footer = await loadFooter();
-	}
-
-	getData();
 
 	// Track modal order for stacking
 	let modalOrder = $state<string[]>([]);
@@ -102,7 +70,7 @@
 
 <div class="xp-font flex h-screen w-full items-start justify-start gap-4 bg-black select-none">
 	{#if bioOpen}
-		<BioModal {closeBio} {personal} {modalOrder} {bringModalToFront} />
+		<BioModal {closeBio} {bio} {modalOrder} {bringModalToFront} />
 	{/if}
 	{#if codingOpen}
 		<CodingModal {closeCoding} {coding} {modalOrder} {bringModalToFront} />
