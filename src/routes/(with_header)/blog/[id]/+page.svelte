@@ -4,21 +4,10 @@
 	import { blogs } from '$lib/data';
 	import { ChevronLeft } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
-	import { SITE_NAME, resolveCanonical } from '$lib/config/seo';
 
 	const blogId: number = $derived(parseInt(page.params.id));
 
 	const foundBlog = $derived(blogs.find((blog) => blog.id === blogId));
-
-	const title = $derived(
-		foundBlog?.title ? `${foundBlog.title} — Blog — ${SITE_NAME}` : `Blog — ${SITE_NAME}`
-	);
-	const description = $derived(
-		foundBlog?.content?.slice(0, 155)?.replace(/\s+/g, ' ').trim() ||
-			foundBlog?.contentAd1?.slice(0, 155)?.replace(/\s+/g, ' ').trim() ||
-			'Blog post by Lukas Jääger'
-	);
-	const canonicalUrl = $derived(resolveCanonical(page.url?.pathname || `/blog/${page.params.id}`));
 
 	// Get blogs of the same type, sorted by id
 	const sameTypeBlogs = $derived(
@@ -49,32 +38,6 @@
 		}
 	};
 </script>
-
-<svelte:head>
-	<title>{title}</title>
-	<meta name="description" content={description} />
-	<link rel="canonical" href={canonicalUrl} />
-
-	<meta property="og:type" content="article" />
-	<meta property="og:title" content={title} />
-	<meta property="og:description" content={description} />
-	<meta property="og:url" content={canonicalUrl} />
-
-	<script type="application/ld+json">
-		{JSON.stringify({
-			'@context': 'https://schema.org',
-			'@type': 'BlogPosting',
-			headline: foundBlog?.title,
-			description,
-			datePublished: foundBlog?.date,
-			author: {
-					'@type': 'Person',
-					name: 'Lukas Jääger'
-			},
-			mainEntityOfPage: canonicalUrl
-		})}
-	</script>
-</svelte:head>
 
 <div class="flex h-auto min-h-screen w-screen items-start justify-center py-16 md:py-20">
 	<div

@@ -4,33 +4,16 @@
 	import { Rabbit, FileUser } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 	import { blogs } from '$lib/data';
-	import { page } from '$app/state';
-	import { SITE_NAME, resolveCanonical } from '$lib/config/seo';
 
 	let value = $state(['']);
 
 	const qportBlogs = blogs.filter((blog) => blog.type === 'qport');
 	const personalBlogs = blogs.filter((blog) => blog.type === 'personal');
 
-	const title = `${SITE_NAME} — Blog`;
-	const description = 'Updates about projects and personal findings.';
-	const canonicalUrl = $derived(resolveCanonical(page.url?.pathname || '/blog'));
-
 	const openBlog = (id: number) => {
 		goto(`/blog/${id}`);
 	};
 </script>
-
-<svelte:head>
-	<title>{title}</title>
-	<meta name="description" content={description} />
-	<link rel="canonical" href={canonicalUrl} />
-
-	<meta property="og:type" content="website" />
-	<meta property="og:title" content={title} />
-	<meta property="og:description" content={description} />
-	<meta property="og:url" content={canonicalUrl} />
-</svelte:head>
 
 <div class="flex h-auto min-h-screen w-screen items-start justify-center py-16 md:py-20">
 	<div
