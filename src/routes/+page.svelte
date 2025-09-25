@@ -6,8 +6,14 @@
 	import { onMount } from 'svelte';
 	import WindowsPage from '$lib/components/windowsMode/WindowsPage.svelte';
 	import type { PageData } from './$types';
+	import { page } from '$app/state';
+	import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, resolveCanonical } from '$lib/config/seo';
 
 	let { data }: PageData = $props();
+
+	const pageTitle = SITE_NAME;
+	const pageDescription = data?.personal?.[0]?.bio_text || SITE_DESCRIPTION;
+	const canonicalUrl = $derived(resolveCanonical(page.url?.pathname || '/'));
 
 	let projectsActive = $state(false);
 
@@ -88,6 +94,28 @@
 	// Height for the projects component
 	let projectsHeight = $state(0);
 </script>
+
+<svelte:head>
+	<title>{pageTitle}</title>
+	<meta name="description" content={pageDescription} />
+	<link rel="canonical" href={canonicalUrl} />
+
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content={pageTitle} />
+	<meta property="og:description" content={pageDescription} />
+	<meta property="og:url" content={canonicalUrl} />
+
+	<script type="application/ld+json">
+		{JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'Person',
+			name: 'Lukas Jääger',
+			description: pageDescription,
+			url: SITE_URL,
+			sameAs: (data?.socials || []).map((soc) => soc.social_url)
+		})}
+	</script>
+</svelte:head>
 
 <svelte:window bind:outerWidth />
 

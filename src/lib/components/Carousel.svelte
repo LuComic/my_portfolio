@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ArrowLeft, ArrowRight } from '@lucide/svelte';
-	let { pics }: { pics: string[] | undefined } = $props();
+	let { pics, altBase }: { pics: string[] | undefined; altBase?: string | undefined } = $props();
 	let current = $state(0);
 
 	const moveRight = () => {
@@ -35,7 +35,7 @@
 				</button>
 				<img
 					src={pic}
-					alt="project pic"
+					alt={altBase ? `Screenshot of ${altBase}` : 'Project screenshot'}
 					class="mx-auto h-auto max-h-[45vh] w-auto rounded-xl object-cover"
 				/>
 				<button class="ml-4 text-zinc-300 duration-100 hover:text-zinc-400" onclick={moveRight}>
