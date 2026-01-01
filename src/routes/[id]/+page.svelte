@@ -2,7 +2,7 @@
 	import ProjectModal from '$lib/components/ProjectModal.svelte';
 	import { page } from '$app/state';
 
-	let project_id: number = $state(parseInt(page.params.id));
+	const project_id: number = $derived(parseInt(page.params.id));
 </script>
 
 <div class="flex h-auto min-h-screen w-screen items-center justify-center">
